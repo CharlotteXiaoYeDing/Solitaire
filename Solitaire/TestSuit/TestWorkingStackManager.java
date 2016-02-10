@@ -12,6 +12,7 @@ import solitaire.DeckOrdered;
 import solitaire.GameModel;
 import solitaire.WorkingStack;
 import solitaire.WorkingStackManager;
+import solitaire.WorkingStackManager.Workingstack;
 
 public class TestWorkingStackManager {
     WorkingStackManager wst;
@@ -29,7 +30,6 @@ public class TestWorkingStackManager {
                 Field workingstack = GameModel.class.getDeclaredField("aWorkingStack");
                 workingstack.setAccessible(true);
                 wst = (WorkingStackManager) workingstack.get(GameModel.getInstance());
-//                wst.print();
                 assertEquals(Card.flyWeightFactory(Card.Rank.KING, Card.Suit.HEARTS),
                         (wst.viewWorkingStack(WorkingStackManager.Workingstack.StackOne)).pop());
                 assertEquals(Card.flyWeightFactory(Card.Rank.JACK, Card.Suit.HEARTS),
@@ -58,33 +58,36 @@ public class TestWorkingStackManager {
 
     @Test
     public void testAddDraw() {
-        for (Card aCard: aDeck)
-        {
+        for (Card aCard : aDeck) {
             aCard.setVisiblity(true);
         }
-
-        //JACK DIAMONDS
+        // JACK DIAMONDS
         assertTrue(wst.canAdd(aDeck.peek(), (WorkingStackManager.Workingstack.StackFive)));
-        wst.add(aDeck.draw(), (WorkingStackManager.Workingstack.StackFive));
+        Card c1 = aDeck.draw();
+        wst.add(c1, (WorkingStackManager.Workingstack.StackFive));
+        assertFalse(aDeck.peek().equals(c1));
+        assertEquals(c1, wst.viewWorkingStack(Workingstack.StackFive).peek());
         assertFalse(wst.canAdd(aDeck.peek(), (WorkingStackManager.Workingstack.StackTwo)));
         assertFalse(wst.canAdd(aDeck.peek(), (WorkingStackManager.Workingstack.StackSix)));
-        //TEN
+        // TEN
         aDeck.draw();
         aDeck.draw();
         aDeck.draw();
-        //SEVEN
+        // SEVEN
         assertFalse(wst.canAdd(aDeck.draw(), (WorkingStackManager.Workingstack.StackOne)));
         assertFalse(wst.isEmpty(WorkingStackManager.Workingstack.StackTwo));
         assertTrue(wst.canDraw((WorkingStackManager.Workingstack.StackTwo)));
+        Card c2 = wst.viewWorkingStack(WorkingStackManager.Workingstack.StackTwo).peek();
         wst.draw((WorkingStackManager.Workingstack.StackTwo));
+        assertNotEquals(c2, wst.viewWorkingStack(WorkingStackManager.Workingstack.StackTwo).peek());
         assertTrue(wst.canDraw((WorkingStackManager.Workingstack.StackTwo)));
         wst.draw((WorkingStackManager.Workingstack.StackTwo));
         assertTrue(wst.isEmpty(WorkingStackManager.Workingstack.StackTwo));
         assertFalse(wst.canDraw((WorkingStackManager.Workingstack.StackTwo)));
-        //SIX
+        // SIX
         assertFalse(wst.canAdd(aDeck.draw(), (WorkingStackManager.Workingstack.StackTwo)));
         assertTrue(wst.canAdd(aDeck.peek(), WorkingStackManager.Workingstack.StackSix));
-        //FIVE
+        // FIVE
         wst.add(aDeck.peek(), WorkingStackManager.Workingstack.StackSix);
         aDeck.draw();
         assertFalse(wst.canAdd(aDeck.draw(), (WorkingStackManager.Workingstack.StackFour)));
@@ -93,15 +96,22 @@ public class TestWorkingStackManager {
         aDeck.draw();
         assertTrue(wst.canAdd(aDeck.peek(), (WorkingStackManager.Workingstack.StackTwo)));
         wst.add(aDeck.draw(), (WorkingStackManager.Workingstack.StackTwo));
-        wst.add(aDeck.draw(),  (WorkingStackManager.Workingstack.StackOne));
-        wst.add(aDeck.draw(),  (WorkingStackManager.Workingstack.StackSeven));
-        wst.add(aDeck.draw(),  (WorkingStackManager.Workingstack.StackFive));
-        wst.print();
-        assertTrue(wst.canDrawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS), (WorkingStackManager.Workingstack.StackSeven)));
-        assertFalse(wst.canDrawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS), (WorkingStackManager.Workingstack.StackFive)));
-        assertTrue(wst.canAdd(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS), (WorkingStackManager.Workingstack.StackTwo)));
-        System.out.println(wst.drawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS), (WorkingStackManager.Workingstack.StackSeven)).lastElement());
-        wst.addMultiple(wst.drawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS), (WorkingStackManager.Workingstack.StackSeven)),(WorkingStackManager.Workingstack.StackTwo));
+        wst.add(aDeck.draw(), (WorkingStackManager.Workingstack.StackOne));
+        wst.add(aDeck.draw(), (WorkingStackManager.Workingstack.StackSeven));
+        wst.add(aDeck.draw(), (WorkingStackManager.Workingstack.StackFive));
+        System.out.print(wst.toString());
+        Card c3 = wst.viewWorkingStack(WorkingStackManager.Workingstack.StackSeven).peek();
+        assertTrue(wst.canDrawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS),
+                (WorkingStackManager.Workingstack.StackSeven)));
+        assertFalse(wst.canDrawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS),
+                (WorkingStackManager.Workingstack.StackFive)));
+        assertTrue(wst.canAdd(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS),
+                (WorkingStackManager.Workingstack.StackTwo)));
+        wst.addMultiple(wst.drawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS),
+                (WorkingStackManager.Workingstack.StackSeven)), (WorkingStackManager.Workingstack.StackTwo));
+        assertNotEquals(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS),
+                wst.viewWorkingStack(WorkingStackManager.Workingstack.StackSeven).peek());
+        assertEquals(c3, wst.viewWorkingStack(WorkingStackManager.Workingstack.StackTwo).peek());
     }
 
 }

@@ -62,4 +62,17 @@ public class SuitStackManager {
         return false;
     }
 
+    @Override
+    public String toString() {
+        String s = "";
+        for (Suit suit : Card.Suit.values()) {
+            if (viewSuitStack(suit) == null) {
+                s = s + suit + "Empty" + "\n";
+            } else {
+                s = s + suit + " " + viewSuitStack(suit).toString() + "\n";
+            }
+        }
+        return s;
+    }
+
 }

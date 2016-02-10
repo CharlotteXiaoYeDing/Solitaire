@@ -69,4 +69,12 @@ public class Deck implements Iterable<Card> {
         return aCards.iterator();
     }
 
+    @Override
+    public String toString() {
+        if (!aCards.isEmpty()) {
+            return aCards.peek().toString();
+        }
+        return null;
+    }
+
 }

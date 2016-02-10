@@ -57,7 +57,7 @@ public class WorkingStackManager {
         while (pCard != aWorkingStack[workingstack.ordinal()].view()) {
             aStack.add(aWorkingStack[workingstack.ordinal()].draw());
         }
-        aStack.add(pCard);
+        aStack.add(aWorkingStack[workingstack.ordinal()].draw());
         aWorkingStack[workingstack.ordinal()].view().setVisiblity(true);
         return aStack;
     }
@@ -98,14 +98,18 @@ public class WorkingStackManager {
         return visibleCard;
     }
 
-    public void print() {
+    @Override
+    public String toString() {
+        String s = "";
         for (Workingstack pWorkingstack : Workingstack.values()) {
-            System.out.println(pWorkingstack.name());
+            s = s + pWorkingstack.name() + " ";
             for (Card c : viewWorkingStack(pWorkingstack)) {
-                System.out.print(c.toString() + " ");
+                s = s + c.toString() + " ";
             }
-            System.out.println();
+
+            s = s + "\n";
         }
+        return s;
 
     }
 

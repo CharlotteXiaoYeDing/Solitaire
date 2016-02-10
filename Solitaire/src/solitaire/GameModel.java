@@ -19,6 +19,11 @@ public final class GameModel {
         return INSTANCE;
     }
 
+    /**
+     * Initiate a new deck and shuffle it, set the first card of the deck to be
+     * visible Initiate an empty stack as discard deck Initiate WorkingStack and
+     * SuitStack
+     */
     public void reset() {
         aDeck.shuffle();
         aDiscard = new Stack<Card>();
