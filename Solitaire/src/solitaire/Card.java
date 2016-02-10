@@ -84,8 +84,11 @@ public class Card {
 
     /**
      * Using FlyWeight Design pattern to ensure the uniqueness of Card
-     * @param pRank the Rank of Card to be drawn
-     * @param pSuit the Suit of Card to be drawn
+     * 
+     * @param pRank
+     *            the Rank of Card to be drawn
+     * @param pSuit
+     *            the Suit of Card to be drawn
      * @return a Card of specified Rank and Suit
      */
     public static Card flyWeightFactory(Rank pRank, Suit pSuit) {

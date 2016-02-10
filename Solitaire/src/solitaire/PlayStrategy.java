@@ -1,6 +1,5 @@
 package solitaire;
 
-public interface PlayStrategy
-{
-	void play();
+public interface PlayStrategy {
+    void play();
 }

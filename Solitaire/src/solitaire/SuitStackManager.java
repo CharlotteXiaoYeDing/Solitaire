@@ -23,9 +23,9 @@ public class SuitStackManager {
         assert pCard != null;
         assert canAdd(pCard);
         if (!aSuitStackManager.containsKey(pCard.getSuit())) {
-                aSuitStackManager.put(pCard.getSuit(), pCard);
+            aSuitStackManager.put(pCard.getSuit(), pCard);
         } else {
-                aSuitStackManager.replace(pCard.getSuit(), pCard);
+            aSuitStackManager.replace(pCard.getSuit(), pCard);
         }
     }
 

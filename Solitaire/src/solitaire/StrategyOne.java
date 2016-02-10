@@ -1,17 +1,13 @@
 package solitaire;
 
-public class StrategyOne implements PlayStrategy
-{
-	
+public class StrategyOne implements PlayStrategy {
 
-	public StrategyOne()
-	{
-		
-	}
+    public StrategyOne() {
 
-	@Override
-	public void play()
-	{
-			
-	}
+    }
+
+    @Override
+    public void play() {
+
+    }
 }

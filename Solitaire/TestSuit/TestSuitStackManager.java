@@ -24,13 +24,11 @@ public class TestSuitStackManager {
         assertTrue(aManager.canAdd(Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES)));
         aManager.add(Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
         aManager.add(Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
-        assertEquals(aManager.viewSuitStack(Card.Suit.CLUBS),Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
-        assertEquals(aManager.viewSuitStack(Card.Suit.DIAMONDS),null);
-        assertEquals(aManager.viewSuitStack(Card.Suit.SPADES),Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
+        assertEquals(aManager.viewSuitStack(Card.Suit.CLUBS), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
+        assertEquals(aManager.viewSuitStack(Card.Suit.DIAMONDS), null);
+        assertEquals(aManager.viewSuitStack(Card.Suit.SPADES), Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
     }
-    
 
-    
     @Test
     public void testDraw() {
         SuitStackManager aManager = new SuitStackManager();
@@ -43,7 +41,5 @@ public class TestSuitStackManager {
         assertEquals((aManager.draw(Card.Suit.CLUBS)), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
         assertFalse(aManager.canDraw(Card.Suit.DIAMONDS));
     }
-    
-
 
 }
