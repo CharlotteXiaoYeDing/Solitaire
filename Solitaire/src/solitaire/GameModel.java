@@ -8,10 +8,10 @@ import solitaire.WorkingStackManager.Workingstack;
 public final class GameModel
 {
 	private static final GameModel INSTANCE = new GameModel();
-	private Deck aDeck;
+	private Deck aDeck = new Deck();
 	private WorkingStackManager aWorkingStack;
 	private SuitStackManager aSuitStackManager;
-	private Deck aDiscard;
+	private Stack<Card> aDiscard;
 
 	private GameModel()
 	{
@@ -24,9 +24,8 @@ public final class GameModel
 
 	public void reset()
 	{
-		aDiscard = new Deck();
-		aDeck = new Deck();
-		aDeck.shuffle();
+	    aDeck.shuffle();
+	    aDiscard = new Stack<Card>();
 		aWorkingStack = new WorkingStackManager(aDeck);
 		aDeck.peek().setVisiblity(true);
 		aSuitStackManager = new SuitStackManager();
@@ -101,7 +100,7 @@ public final class GameModel
 	public void moveFromDiscardtoWorkingStack(Workingstack pWorkingstack)
 	{
 		assert canMoveFromDiscardtoWorkingStack(pWorkingstack);
-		aWorkingStack.add(aDiscard.draw(), pWorkingstack);
+		aWorkingStack.add(aDiscard.pop(), pWorkingstack);
 	}
 
 	public boolean canMoveFromDiscardtoSuitStack()
@@ -112,7 +111,7 @@ public final class GameModel
 	public void moveFromDiscardtoSuitStack()
 	{
 		assert canMoveFromDiscardtoSuitStack();
-		aSuitStackManager.add(aDiscard.draw());
+		aSuitStackManager.add(aDiscard.pop());
 	}
 
 	public boolean canMoveFromWorkingStacktoSuitStack(Workingstack pWorkingstack)

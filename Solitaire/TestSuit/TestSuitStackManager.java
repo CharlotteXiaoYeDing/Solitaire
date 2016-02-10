@@ -14,23 +14,6 @@ public class TestSuitStackManager {
     @Test
     public void testAdd() {
         SuitStackManager aManager = new SuitStackManager();
-        try {
-            Field aField = aManager.getClass().getDeclaredField("aSuitStackManager");
-            aField.setAccessible(true);
-            try {
-                @SuppressWarnings("unchecked")
-                Map<Suit, Card> aMap = (Map<Suit, Card>) aField.get(aManager);
-                assertFalse(aMap==null);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }    
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
         assertFalse(aManager.canAdd(Card.flyWeightFactory(Card.Rank.FIVE, Card.Suit.DIAMONDS)));
         assertTrue(aManager.canAdd(Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.SPADES)));
         assertTrue(aManager.canAdd(Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS)));
@@ -55,9 +38,12 @@ public class TestSuitStackManager {
         aManager.add(Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
         aManager.add(Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
         assertTrue(aManager.canDraw(Card.Suit.SPADES));
+        assertEquals((aManager.draw(Card.Suit.SPADES)), Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
         assertTrue(aManager.canDraw(Card.Suit.CLUBS));
+        assertEquals((aManager.draw(Card.Suit.CLUBS)), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
         assertFalse(aManager.canDraw(Card.Suit.DIAMONDS));
     }
     
+
 
 }

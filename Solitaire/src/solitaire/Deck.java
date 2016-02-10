@@ -10,7 +10,7 @@ import solitaire.Card.Rank;
  * An Iterable implementation of cards.
  */
 public class Deck implements Iterable<Card> {
-    private final Stack<Card> aCards = new Stack<>();
+    protected final Stack<Card> aCards = new Stack<>();
 
     /**
      * Empty Deck constructor

@@ -4,14 +4,10 @@ import java.util.Stack;
 
 public class WorkingStackManager
 {
-	public static void main(String[] args)
-	{
-
-	}
 
 	public enum Workingstack
 	{
-		StackOne, StackTwo, StackThree, StackFour, StackFive, StackSeven
+		StackOne, StackTwo, StackThree, StackFour, StackFive, StackSix, StackSeven
 	};
 
 	private final WorkingStack[] aWorkingStack = new WorkingStack[Workingstack.values().length];
@@ -20,7 +16,7 @@ public class WorkingStackManager
 	{
 		for (int i = 0; i < aWorkingStack.length; i++)
 		{
-			aWorkingStack[i] = new WorkingStack(deck, (Workingstack.StackOne.ordinal() + 1));
+			aWorkingStack[i] = new WorkingStack(deck, (Workingstack.StackOne.ordinal() + 1 + i));
 			aWorkingStack[i].view().setVisiblity(true);
 		}
 	}
@@ -59,7 +55,7 @@ public class WorkingStackManager
 	{
 		assert canDraw(workingstack);
 		Card aCard= aWorkingStack[workingstack.ordinal()].draw();
-		if (!aWorkingStack[workingstack.ordinal()].view().isVisible())
+		if ((!aWorkingStack[workingstack.ordinal()].isEmpty()) && (!aWorkingStack[workingstack.ordinal()].view().isVisible()))
 		{
 			aWorkingStack[workingstack.ordinal()].view().setVisiblity(true);
 		}
@@ -122,6 +118,20 @@ public class WorkingStackManager
 			}
 		}
 		return visibleCard;
+	}
+	
+	public void print()
+	{
+	    for (Workingstack pWorkingstack: Workingstack.values())
+	    {
+	        System.out.println(pWorkingstack.name());
+	        for (Card c:  viewWorkingStack(pWorkingstack))
+	        {
+	            System.out.print(c.toString() + " ");
+	        }
+	        System.out.println();
+	    }
+	    
 	}
 
 }

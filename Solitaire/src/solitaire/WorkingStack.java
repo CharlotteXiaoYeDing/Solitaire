@@ -17,7 +17,8 @@ public class WorkingStack implements Iterable<Card>
 	
 	public void add(Card pCard)
 	{
-		this.add(Card.flyWeightFactory(pCard.getRank(), pCard.getSuit()));
+	    aWorkingStack.add(pCard);
+
 	}
 	
 	public Card draw()
