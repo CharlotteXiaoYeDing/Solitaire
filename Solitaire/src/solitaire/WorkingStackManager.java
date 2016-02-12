@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class WorkingStackManager {
 
-    public enum Workingstack {
+    public enum Workingstack implements Location{
         StackOne, StackTwo, StackThree, StackFour, StackFive, StackSix, StackSeven
     };
 
@@ -76,14 +76,10 @@ public class WorkingStackManager {
                 candraw = true;
             }
         }
-        return !isEmpty(workingstack) && candraw;
+        return candraw;
     }
 
     public boolean canDraw(Workingstack workingstack) {
-        return !isEmpty(workingstack);
-    }
-
-    public boolean isEmpty(Workingstack workingstack) {
         return aWorkingStack[workingstack.ordinal()].isEmpty();
     }
 

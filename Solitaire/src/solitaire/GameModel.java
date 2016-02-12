@@ -3,6 +3,7 @@ package solitaire;
 import java.util.Stack;
 
 import solitaire.Card.Suit;
+import solitaire.SuitStackManager.SuitStack;
 import solitaire.WorkingStackManager.Workingstack;
 
 public final class GameModel {
@@ -11,8 +12,14 @@ public final class GameModel {
     private WorkingStackManager aWorkingStack;
     private SuitStackManager aSuitStackManager;
     private Stack<Card> aDiscard;
+    private UndoManager aUndoManager = new UndoManager();
 
     private GameModel() {
+    }
+    
+    public enum CardDeck implements Location 
+    {
+        DECK, DISCARD
     }
 
     public static GameModel getInstance() {
@@ -39,6 +46,12 @@ public final class GameModel {
             aDeck.peek().setVisiblity(true);
         }
     }
+    
+    public void undoDiscard()
+    {
+        aDeck.add(aDiscard.pop());
+        aDeck.peek().setVisiblity(true);
+    }
 
     public void autoplay(PlayStrategy pStrategy) {
         pStrategy.play();
@@ -52,42 +65,42 @@ public final class GameModel {
         return aDiscard.isEmpty();
     }
 
-    public Stack<Card> viewWorkingStack(Workingstack pWorkingstack) {
-        return aWorkingStack.viewWorkingStack(pWorkingstack);
+    public Stack<Card> viewWorkingStack(Location pWorkingstack) {
+        return aWorkingStack.viewWorkingStack((Workingstack) pWorkingstack);
     }
 
-    public Card viewSuitStack(Suit pSuit) {
-        return aSuitStackManager.viewSuitStack(pSuit);
+    public Card viewSuitStack(Location pSuitStack) {
+        return aSuitStackManager.viewSuitStack((SuitStack) pSuitStack);
     }
 
     public int getScore() {
         int score = 0;
-        for (Suit aSuit : Card.Suit.values()) {
-            if (viewSuitStack(aSuit) != null) {
-                int sum = viewSuitStack(aSuit).getRank().ordinal() + 1;
+        for (SuitStack aSuitStack : SuitStack.values()) {
+            if (viewSuitStack(aSuitStack) != null) {
+                int sum = viewSuitStack(aSuitStack).getRank().ordinal() + 1;
                 score = score + sum;
             }
         }
         return score;
     }
 
-    public boolean canMoveFromSuitStacktoWorkingStack(Suit pSuit, Workingstack pWorkingstack) {
-        return aSuitStackManager.canDraw(pSuit)
-                && aWorkingStack.canAdd(aSuitStackManager.viewSuitStack(pSuit), pWorkingstack);
+    public boolean canMoveFromSuitStacktoWorkingStack(Location pSuitStack, Location pWorkingstack) {
+        return aSuitStackManager.canDraw(pSuitStack)
+                && aWorkingStack.canAdd(aSuitStackManager.viewSuitStack((SuitStack) pSuitStack), (Workingstack) pWorkingstack);
     }
 
-    public void moveFromSuitStacktoWorkingStack(Suit pSuit, Workingstack pWorkingstack) {
-        assert canMoveFromSuitStacktoWorkingStack(pSuit, pWorkingstack);
-        aWorkingStack.add(aSuitStackManager.draw(pSuit), pWorkingstack);
+    public void moveFromSuitStacktoWorkingStack(Location pSuitStack, Location pWorkingstack) {
+        assert canMoveFromSuitStacktoWorkingStack(pSuitStack, pWorkingstack);
+        aWorkingStack.add(aSuitStackManager.draw((SuitStack) pSuitStack), (Workingstack) pWorkingstack);
     }
 
-    public boolean canMoveFromDiscardtoWorkingStack(Workingstack pWorkingstack) {
-        return !isDiscardEmpty() && aWorkingStack.canAdd(aDiscard.peek(), pWorkingstack);
+    public boolean canMoveFromDiscardtoWorkingStack(Location pWorkingstack) {
+        return !isDiscardEmpty() && aWorkingStack.canAdd(aDiscard.peek(), (Workingstack) pWorkingstack);
     }
 
-    public void moveFromDiscardtoWorkingStack(Workingstack pWorkingstack) {
+    public void moveFromDiscardtoWorkingStack(Location pWorkingstack) {
         assert canMoveFromDiscardtoWorkingStack(pWorkingstack);
-        aWorkingStack.add(aDiscard.pop(), pWorkingstack);
+        aWorkingStack.add(aDiscard.pop(), (Workingstack) pWorkingstack);
     }
 
     public boolean canMoveFromDiscardtoSuitStack() {
@@ -99,23 +112,36 @@ public final class GameModel {
         aSuitStackManager.add(aDiscard.pop());
     }
 
-    public boolean canMoveFromWorkingStacktoSuitStack(Workingstack pWorkingstack) {
-        return aWorkingStack.canDraw(pWorkingstack)
-                && aSuitStackManager.canAdd(aWorkingStack.viewWorkingStack(pWorkingstack).firstElement());
+    public boolean canMoveFromWorkingStacktoSuitStack(Location pWorkingstack) {
+        return aWorkingStack.canDraw((Workingstack) pWorkingstack)
+                && aSuitStackManager.canAdd(aWorkingStack.viewWorkingStack((Workingstack) pWorkingstack).firstElement());
     }
 
-    public void moveFromWorkingStacktoSuitStack(Workingstack pWorkingstack) {
+    public void moveFromWorkingStacktoSuitStack(Location pWorkingstack) {
         assert canMoveFromWorkingStacktoSuitStack(pWorkingstack);
-        aSuitStackManager.add(aWorkingStack.draw(pWorkingstack));
+        aSuitStackManager.add(aWorkingStack.draw((Workingstack) pWorkingstack));
     }
 
-    public boolean canMoveFromWorkingStacktoWorkingStack(Workingstack sWorkingstack, Card pCard,
-            Workingstack dWorkingstack) {
-        return aWorkingStack.canDrawMultiple(pCard, sWorkingstack) && aWorkingStack.canAdd(pCard, dWorkingstack);
+    public boolean canMoveFromWorkingStacktoWorkingStack(Location sWorkingstack, Card pCard,
+            Location dWorkingstack) {
+        return aWorkingStack.canDrawMultiple(pCard, (Workingstack) sWorkingstack) && aWorkingStack.canAdd(pCard, (Workingstack) dWorkingstack);
     }
 
-    public void moveFromWorkingStacktoWorkingStack(Workingstack sWorkingstack, Card pCard, Workingstack dWorkingstack) {
+    public void moveFromWorkingStacktoWorkingStack(Location sWorkingstack, Card pCard, Location dWorkingstack) {
         assert canMoveFromWorkingStacktoWorkingStack(sWorkingstack, pCard, dWorkingstack);
-        aWorkingStack.addMultiple(aWorkingStack.drawMultiple(pCard, sWorkingstack), dWorkingstack);
+        aWorkingStack.addMultiple(aWorkingStack.drawMultiple(pCard, (Workingstack) sWorkingstack), (Workingstack) dWorkingstack);
+    }
+    
+    public void undoMoveFromDiscardtoSuitStack(Location pSuitStack)
+    {
+        aDiscard.push(aSuitStackManager.draw((SuitStack) pSuitStack));
+    }
+    
+    public void undoMoveFromDiscardtoWorkingStack(Location pWorkingstack) {
+        aDiscard.push(aWorkingStack.draw((Workingstack) pWorkingstack));
+    }
+    
+    public void logMove(Move pMove){
+        aUndoManager.addMove(pMove);
     }
 }

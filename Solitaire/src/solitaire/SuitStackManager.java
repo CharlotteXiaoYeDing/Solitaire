@@ -5,15 +5,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SuitStackManager {
-    private final Map<Suit, Card> aSuitStackManager;
+    private final Map<SuitStack, Card> aSuitStackManager;
+    
+    public enum SuitStack implements Location
+    {
+        StackClubs, StackDiamonds, StackSpades, SuitHearts
+    }
 
     public SuitStackManager() {
         aSuitStackManager = new HashMap<>();
     }
 
-    public Card viewSuitStack(Suit pSuit) {
-        if (aSuitStackManager.containsKey(pSuit)) {
-            return aSuitStackManager.get(pSuit);
+    public Card viewSuitStack(SuitStack pSuitStack) {
+        if (aSuitStackManager.containsKey(pSuitStack)) {
+            return aSuitStackManager.get(pSuitStack);
         } else {
             return null;
         }
@@ -22,41 +27,41 @@ public class SuitStackManager {
     public void add(Card pCard) {
         assert pCard != null;
         assert canAdd(pCard);
-        if (!aSuitStackManager.containsKey(pCard.getSuit())) {
-            aSuitStackManager.put(pCard.getSuit(), pCard);
+        if (!aSuitStackManager.containsKey(SuitStack.values()[pCard.getSuit().ordinal()])) {
+            aSuitStackManager.put(SuitStack.values()[pCard.getSuit().ordinal()], pCard);
         } else {
-            aSuitStackManager.replace(pCard.getSuit(), pCard);
+            aSuitStackManager.replace(SuitStack.values()[pCard.getSuit().ordinal()], pCard);
         }
     }
 
     public boolean canAdd(Card pCard) {
         assert pCard != null;
-        if (!aSuitStackManager.containsKey(pCard.getSuit())) {
+        if (!aSuitStackManager.containsKey(SuitStack.values()[pCard.getSuit().ordinal()])) {
             if (pCard.getRank().ordinal() == Card.Rank.ACE.ordinal()) {
                 return true;
             }
         } else {
-            if ((aSuitStackManager.get(pCard.getSuit()).getRank().ordinal() + 1) == pCard.getRank().ordinal()) {
+            if ((aSuitStackManager.get(SuitStack.values()[pCard.getSuit().ordinal()]).getRank().ordinal() + 1) == pCard.getRank().ordinal()) {
                 return true;
             }
         }
         return false;
     }
 
-    public Card draw(Suit pSuit) {
-        assert canDraw(pSuit);
-        Card pCard = aSuitStackManager.get(pSuit);
+    public Card draw(SuitStack pSuitStack) {
+        assert canDraw(pSuitStack);
+        Card pCard = aSuitStackManager.get(pSuitStack);
         if (pCard.getRank().ordinal() == 0) {
-            aSuitStackManager.remove(pSuit, pCard);
+            aSuitStackManager.remove(pSuitStack, pCard);
         } else {
-            aSuitStackManager.replace(pSuit,
-                    Card.flyWeightFactory(Card.Rank.values()[pCard.getRank().ordinal() - 1], pSuit));
+            aSuitStackManager.replace(pSuitStack,
+                    Card.flyWeightFactory(Card.Rank.values()[pCard.getRank().ordinal() - 1], pCard.getSuit()));
         }
         return pCard;
     }
 
-    public boolean canDraw(Suit pSuit) {
-        if (aSuitStackManager.containsKey(pSuit)) {
+    public boolean canDraw(Location pSuitStack) {
+        if (aSuitStackManager.containsKey(pSuitStack)) {
             return true;
         }
         return false;
@@ -66,10 +71,10 @@ public class SuitStackManager {
     public String toString() {
         String s = "";
         for (Suit suit : Card.Suit.values()) {
-            if (viewSuitStack(suit) == null) {
+            if (viewSuitStack(SuitStack.values()[suit.ordinal()]) == null) {
                 s = s + suit + "Empty" + "\n";
             } else {
-                s = s + suit + " " + viewSuitStack(suit).toString() + "\n";
+                s = s + suit + " " + viewSuitStack(SuitStack.values()[suit.ordinal()]).toString() + "\n";
             }
         }
         return s;

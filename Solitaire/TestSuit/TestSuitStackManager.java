@@ -24,9 +24,9 @@ public class TestSuitStackManager {
         assertTrue(aManager.canAdd(Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES)));
         aManager.add(Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
         aManager.add(Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
-        assertEquals(aManager.viewSuitStack(Card.Suit.CLUBS), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
-        assertEquals(aManager.viewSuitStack(Card.Suit.DIAMONDS), null);
-        assertEquals(aManager.viewSuitStack(Card.Suit.SPADES), Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
+        assertEquals(aManager.viewSuitStack(SuitStackManager.SuitStack.StackClubs), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
+        assertEquals(aManager.viewSuitStack(SuitStackManager.SuitStack.StackDiamonds), null);
+        assertEquals(aManager.viewSuitStack(SuitStackManager.SuitStack.StackSpades), Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
     }
 
     @Test
@@ -35,11 +35,11 @@ public class TestSuitStackManager {
         aManager.add(Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.SPADES));
         aManager.add(Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
         aManager.add(Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
-        assertTrue(aManager.canDraw(Card.Suit.SPADES));
-        assertEquals((aManager.draw(Card.Suit.SPADES)), Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
-        assertTrue(aManager.canDraw(Card.Suit.CLUBS));
-        assertEquals((aManager.draw(Card.Suit.CLUBS)), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
-        assertFalse(aManager.canDraw(Card.Suit.DIAMONDS));
+        assertTrue(aManager.canDraw(SuitStackManager.SuitStack.StackSpades));
+        assertEquals((aManager.draw(SuitStackManager.SuitStack.StackSpades)), Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.SPADES));
+        assertTrue(aManager.canDraw(SuitStackManager.SuitStack.StackClubs));
+        assertEquals((aManager.draw(SuitStackManager.SuitStack.StackClubs)), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
+        assertFalse(aManager.canDraw(SuitStackManager.SuitStack.StackDiamonds));
     }
 
 }
