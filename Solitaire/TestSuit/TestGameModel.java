@@ -1,19 +1,21 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Stack;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import solitaire.Card;
-import solitaire.Card.Suit;
 import solitaire.Deck;
 import solitaire.DeckOrdered;
 import solitaire.GameModel;
 import solitaire.SuitStackManager;
+import solitaire.SuitStackManager.SuitStack;
 import solitaire.WorkingStackManager;
 import solitaire.WorkingStackManager.Workingstack;
 
@@ -25,8 +27,9 @@ public class TestGameModel {
     static WorkingStackManager aWorkingStackManager;
     static Stack<Card> aDiscard;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
+    @SuppressWarnings("unchecked")
+    @Before
+    public void setUp() throws Exception {
         aGameModel = GameModel.getInstance();
         Field fDeck = GameModel.class.getDeclaredField("aDeck");
         fDeck.setAccessible(true);
@@ -42,10 +45,6 @@ public class TestGameModel {
         Field fDiscard = GameModel.class.getDeclaredField("aDiscard");
         fDiscard.setAccessible(true);
         aDiscard = (Stack<Card>) fDiscard.get(aGameModel);
-    }
-
-    @Test
-    public void testReset() {
         assertFalse(aGameModel.isDeckEmpty());
         assertTrue(aGameModel.isDiscardEmpty());
         assertTrue(aDeck.peek().isVisible());
@@ -55,57 +54,88 @@ public class TestGameModel {
 
     @Test
     public void testDiscard() {
-        if (!aGameModel.isDeckEmpty()) {
-            while (!aGameModel.isDeckEmpty()) {
-                assertTrue(aDeck.peek().isVisible());
-                Card c = aDeck.peek();
-                aGameModel.discard();
-                if (!aGameModel.isDeckEmpty()) {
-                    assertNotEquals(c, aDeck.peek());
-                }
-                assertEquals(c, aDiscard.peek());
+        aDeck.reset();
+        aDeck.shuffle();
+        while (!aGameModel.isDeckEmpty()) {
+            assertTrue(aDeck.peek().isVisible());
+            Card c = aDeck.peek();
+            aGameModel.discard();
+            if (!aGameModel.isDeckEmpty()) {
+                assertNotEquals(c, aDeck.peek());
             }
+            assertEquals(c, aDiscard.peek());
+        }
             assertTrue(aGameModel.isDeckEmpty());
             assertFalse(aGameModel.isDiscardEmpty());
+        
+    }
+
+    @Test
+    public void testUndoDiscard() {
+        if (aGameModel.isDeckEmpty() != true) {
+            aGameModel.discard();
         }
+        Card c = aDiscard.peek();
+        aGameModel.undoDiscard();
+        if (!aGameModel.isDiscardEmpty()) {
+            assertNotEquals(c, aDiscard.peek());
+        }
+        assertEquals(c, aDeck.peek());
+        assertTrue(aDeck.peek().isVisible());
     }
 
     @Test
     public void testMove() {
-        if (!aGameModel.isDeckEmpty()) {
-            aGameModel.discard();
-            assertFalse(aGameModel.canMoveFromDiscardtoSuitStack());
-            assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackOne));
-            assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackTwo));
-            assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackThree));
-            assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackFour));
-            assertTrue(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackFive));
-            assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackSix));
-            assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackSeven));
-            aGameModel.moveFromDiscardtoWorkingStack(Workingstack.StackFive);
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackOne));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackTwo));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackThree));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackFour));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackFive));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackSix));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackSeven));
-            assertTrue(aGameModel.canMoveFromWorkingStacktoWorkingStack(Workingstack.StackFive,
-                    Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.SPADES), Workingstack.StackOne));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoWorkingStack(Workingstack.StackFour,
-                    Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.SPADES), Workingstack.StackThree));
-            aGameModel.moveFromWorkingStacktoWorkingStack(Workingstack.StackFive,
-                    Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.SPADES), Workingstack.StackOne);
-            assertTrue(aGameModel.canMoveFromWorkingStacktoWorkingStack(Workingstack.StackSeven,
-                    Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS), Workingstack.StackFive));
-            aGameModel.moveFromWorkingStacktoWorkingStack(Workingstack.StackSeven,
-                    Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS), Workingstack.StackFive);
-            assertFalse(aGameModel.canMoveFromSuitStacktoWorkingStack(Card.Suit.CLUBS, Workingstack.StackSeven));
-            assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackFour));
-            System.out.println(aDeck.toString());
-            System.out.println(aSuitStackManager.toString());
-            System.out.println(aWorkingStackManager.toString());
+        aDeck.reset();
+        for (int i = 0; i < 28; i++) {
+            aDeck.draw();
         }
+        aGameModel.discard();
+        assertTrue(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackFive));
+        aGameModel.moveFromDiscardtoWorkingStack(Workingstack.StackFive);
+        aGameModel.discard();
+        assertFalse(aGameModel.canMoveFromDiscardtoSuitStack());
+        assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackTwo));
+        aGameModel.discard();
+        aGameModel.discard();
+        aGameModel.discard();
+        assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackThree));
+        aGameModel.discard();
+        aGameModel.discard();
+        assertTrue(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackSix));
+        aGameModel.moveFromDiscardtoWorkingStack(Workingstack.StackSix);
+        aGameModel.discard();
+        aGameModel.discard();
+        assertFalse(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackFour));
+        aGameModel.discard();
+        aGameModel.discard();
+        assertTrue(aGameModel.canMoveFromDiscardtoSuitStack());
+        aGameModel.moveFromDiscardtoSuitStack();
+        assertTrue(aGameModel.canMoveFromWorkingStacktoWorkingStack(Workingstack.StackFive,
+                Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.SPADES), Workingstack.StackOne));
+        aGameModel.moveFromWorkingStacktoWorkingStack(Workingstack.StackFive,
+                Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.SPADES), Workingstack.StackOne);
+        aGameModel.discard();
+        aGameModel.discard();
+        aGameModel.discard();
+        assertTrue(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackSeven));
+        aGameModel.moveFromDiscardtoWorkingStack(Workingstack.StackSeven);
+        aGameModel.discard();
+        assertTrue(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackTwo));
+        aGameModel.moveFromDiscardtoWorkingStack(Workingstack.StackTwo);
+        aGameModel.discard();
+        aGameModel.discard();
+        assertFalse(aGameModel.canMoveFromWorkingStacktoWorkingStack(Workingstack.StackFive,
+                Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.SPADES), Workingstack.StackOne));
+        assertFalse(aGameModel.canMoveFromWorkingStacktoSuitStack(Workingstack.StackSeven));
+        aGameModel.discard();
+        assertTrue(aGameModel.canMoveFromDiscardtoWorkingStack(Workingstack.StackThree));
+        Card c1 = aDiscard.peek();
+        aGameModel.moveFromDiscardtoWorkingStack(Workingstack.StackThree);
+        aGameModel.undoMoveFromDiscardtoWorkingStack(Workingstack.StackThree);
+        c1 = aDiscard.peek();
+        aGameModel.undoMoveFromDiscardtoSuitStack(SuitStack.StackDiamonds);
+        assertEquals(aDiscard.peek(), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.DIAMONDS));
     }
 
 }

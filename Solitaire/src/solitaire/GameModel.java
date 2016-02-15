@@ -7,6 +7,10 @@ import solitaire.SuitStackManager.SuitStack;
 import solitaire.WorkingStackManager.Workingstack;
 
 public final class GameModel {
+    public enum CardDeck implements Location 
+    {
+        DECK, DISCARD
+    }
     private static final GameModel INSTANCE = new GameModel();
     private Deck aDeck = new Deck();
     private WorkingStackManager aWorkingStack;
@@ -17,9 +21,25 @@ public final class GameModel {
     private GameModel() {
     }
     
-    public enum CardDeck implements Location 
+    public static void main (String[] args)
     {
-        DECK, DISCARD
+        double sum = 0;
+        int max =0;
+   ;
+        for (int i = 0; i < 10000; i++)
+        {
+            
+            int score = GameModel.getInstance().autoplay(new StrategyOne());
+            sum = sum + score;
+            if (score > max)
+            {
+                max = score;
+            }
+        }
+        double average = sum/10000;
+        System.out.println(average);
+        System.out.println(max);
+        
     }
 
     public static GameModel getInstance() {
@@ -32,10 +52,11 @@ public final class GameModel {
      * SuitStack
      */
     public void reset() {
+        aDeck.reset();
         aDeck.shuffle();
         aDiscard = new Stack<Card>();
         aWorkingStack = new WorkingStackManager(aDeck);
-        aDeck.peek().setVisiblity(true);
+        aDeck.peek().setVisibility(true);
         aSuitStackManager = new SuitStackManager();
     }
 
@@ -43,18 +64,18 @@ public final class GameModel {
         assert !isDeckEmpty();
         aDiscard.add(aDeck.draw());
         if (!isDeckEmpty()) {
-            aDeck.peek().setVisiblity(true);
+            aDeck.peek().setVisibility(true);
         }
     }
     
     public void undoDiscard()
     {
+        aDeck.peek().setVisibility(false);
         aDeck.add(aDiscard.pop());
-        aDeck.peek().setVisiblity(true);
     }
 
-    public void autoplay(PlayStrategy pStrategy) {
-        pStrategy.play();
+    public int autoplay(PlayStrategy pStrategy) {
+        return pStrategy.play(this);
     }
 
     public boolean isDeckEmpty() {
@@ -73,15 +94,9 @@ public final class GameModel {
         return aSuitStackManager.viewSuitStack((SuitStack) pSuitStack);
     }
 
-    public int getScore() {
-        int score = 0;
-        for (SuitStack aSuitStack : SuitStack.values()) {
-            if (viewSuitStack(aSuitStack) != null) {
-                int sum = viewSuitStack(aSuitStack).getRank().ordinal() + 1;
-                score = score + sum;
-            }
-        }
-        return score;
+    public int getScore()
+    {
+        return aSuitStackManager.getScore();
     }
 
     public boolean canMoveFromSuitStacktoWorkingStack(Location pSuitStack, Location pWorkingstack) {

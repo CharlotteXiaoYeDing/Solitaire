@@ -1,6 +1,8 @@
 package solitaire;
 
 import solitaire.Card.Suit;
+import solitaire.SuitStackManager.SuitStack;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,6 +80,17 @@ public class SuitStackManager {
             }
         }
         return s;
+    }
+    
+    public int getScore() {
+        int score = 0;
+        for (SuitStack aSuitStack : SuitStack.values()) {
+            if (viewSuitStack(aSuitStack) != null) {
+                int sum = viewSuitStack(aSuitStack).getRank().ordinal() + 1;
+                score = score + sum;
+            }
+        }
+        return score;
     }
 
 }

@@ -10,7 +10,7 @@ import solitaire.Card.Rank;
  * An Iterable implementation of cards.
  */
 public class Deck implements Iterable<Card> {
-    protected final Stack<Card> aCards = new Stack<>();
+    private final Stack<Card> aCards = new Stack<>();
 
     /**
      * Empty Deck constructor
@@ -18,16 +18,19 @@ public class Deck implements Iterable<Card> {
     public Deck() {
     }
 
-    /**
-     * Clear original Deck, add 52 cards to it and shuffle the Deck
-     */
-    public void shuffle() {
+    public void reset() {
         aCards.clear();
         for (Suit suit : Suit.values()) {
             for (Rank rank : Rank.values()) {
                 aCards.push(Card.flyWeightFactory(rank, suit));
             }
         }
+    }
+
+    /**
+     * Clear original Deck, add 52 cards to it and shuffle the Deck
+     */
+    public void shuffle() {
         Collections.shuffle(aCards);
     }
 
@@ -69,6 +72,9 @@ public class Deck implements Iterable<Card> {
         return aCards.iterator();
     }
 
+    /**
+     * Return the top Card of the Deck
+     */
     @Override
     public String toString() {
         if (!aCards.isEmpty()) {

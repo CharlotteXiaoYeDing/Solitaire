@@ -19,10 +19,10 @@ public class Card {
         CLUBS, DIAMONDS, SPADES, HEARTS
     }
 
-    private boolean visible;
     private static Card[][] aFlyWeight = new Card[Suit.values().length][Rank.values().length];
     private Rank aRank; // Invariant: != null
     private Suit aSuit; // Invariant: != null
+    private boolean aVisible;
 
     /**
      * @param pRank
@@ -35,7 +35,15 @@ public class Card {
         assert pRank != null && pSuit != null;
         aRank = pRank;
         aSuit = pSuit;
-        visible = false;
+        aVisible = false;
+    }
+
+    public void setVisibility(boolean pVisibility) {
+        aVisible = pVisibility;
+    }
+
+    public boolean isVisible() {
+        return aVisible;
     }
 
     /**
@@ -44,7 +52,7 @@ public class Card {
      * @post return != null
      */
     public Rank getRank() {
-        assert isVisible();
+        assert aVisible;
         return aRank;
     }
 
@@ -54,27 +62,8 @@ public class Card {
      * @post return != null
      */
     public Suit getSuit() {
-        assert isVisible();
+        assert aVisible;
         return aSuit;
-    }
-
-    /**
-     * @return if the card is visible
-     */
-    public boolean isVisible() {
-        return this.visible;
-    }
-
-    /**
-     * Modify the visibility of the Card.
-     * 
-     * @param pVisbility
-     *            If the card is visible
-     */
-    public void setVisiblity(boolean pVisbility) {
-        if (visible != pVisbility) {
-            visible = pVisbility;
-        }
     }
 
     @Override

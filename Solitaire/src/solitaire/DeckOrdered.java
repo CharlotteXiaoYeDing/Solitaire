@@ -12,12 +12,7 @@ public class DeckOrdered extends Deck {
 
     @Override
     public void shuffle() {
-        aCards.clear();
-        for (Suit suit : Suit.values()) {
-            for (Rank rank : Rank.values()) {
-                aCards.push(Card.flyWeightFactory(rank, suit));
-            }
-        }
+
     }
 
 }

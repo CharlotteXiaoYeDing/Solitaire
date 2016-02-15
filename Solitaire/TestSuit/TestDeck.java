@@ -10,15 +10,12 @@ public class TestDeck {
     @Test
     public void test() {
         Deck aDeck = new Deck();
-        aDeck.shuffle();
+        aDeck.reset();
         assertFalse(aDeck.isEmpty());
-        assertFalse(aDeck.draw() == Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.CLUBS));
-        assertFalse(aDeck.draw() == Card.flyWeightFactory(Card.Rank.TWO, Card.Suit.CLUBS));
-        assertFalse(aDeck.draw() == Card.flyWeightFactory(Card.Rank.THREE, Card.Suit.CLUBS));
-        for (int i = 0; i < 49; i++) {
-            aDeck.draw();
-        }
-        assertTrue(aDeck.isEmpty());
+        assertTrue(aDeck.draw() == Card.flyWeightFactory(Card.Rank.KING, Card.Suit.HEARTS));
+        assertTrue(aDeck.peek() == Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.HEARTS));
+        aDeck.add(Card.flyWeightFactory(Card.Rank.KING, Card.Suit.HEARTS));
+        assertEquals(aDeck.peek(), Card.flyWeightFactory(Card.Rank.KING, Card.Suit.HEARTS));
     }
 
 }

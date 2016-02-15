@@ -1,10 +1,11 @@
+
 package solitaire;
 
 import java.util.Stack;
 
 public class WorkingStackManager {
 
-    public enum Workingstack implements Location{
+    public enum Workingstack implements Location {
         StackOne, StackTwo, StackThree, StackFour, StackFive, StackSix, StackSeven
     };
 
@@ -13,7 +14,7 @@ public class WorkingStackManager {
     public WorkingStackManager(Deck deck) {
         for (int i = 0; i < aWorkingStack.length; i++) {
             aWorkingStack[i] = new WorkingStack(deck, (Workingstack.StackOne.ordinal() + 1 + i));
-            aWorkingStack[i].view().setVisiblity(true);
+            aWorkingStack[i].view().setVisibility(true);
         }
     }
 
@@ -44,9 +45,8 @@ public class WorkingStackManager {
     public Card draw(Workingstack workingstack) {
         assert canDraw(workingstack);
         Card aCard = aWorkingStack[workingstack.ordinal()].draw();
-        if ((!aWorkingStack[workingstack.ordinal()].isEmpty())
-                && (!aWorkingStack[workingstack.ordinal()].view().isVisible())) {
-            aWorkingStack[workingstack.ordinal()].view().setVisiblity(true);
+        if ((!aWorkingStack[workingstack.ordinal()].isEmpty())) {
+            aWorkingStack[workingstack.ordinal()].view().setVisibility(true);
         }
         return aCard;
     }
@@ -58,7 +58,10 @@ public class WorkingStackManager {
             aStack.add(aWorkingStack[workingstack.ordinal()].draw());
         }
         aStack.add(aWorkingStack[workingstack.ordinal()].draw());
-        aWorkingStack[workingstack.ordinal()].view().setVisiblity(true);
+        if (!aWorkingStack[workingstack.ordinal()].isEmpty())
+        {
+            aWorkingStack[workingstack.ordinal()].view().setVisibility(true);
+        }
         return aStack;
     }
 
@@ -80,7 +83,7 @@ public class WorkingStackManager {
     }
 
     public boolean canDraw(Workingstack workingstack) {
-        return aWorkingStack[workingstack.ordinal()].isEmpty();
+        return !aWorkingStack[workingstack.ordinal()].isEmpty();
     }
 
     public Stack<Card> viewWorkingStack(Workingstack pWorkingstack) {
@@ -102,7 +105,6 @@ public class WorkingStackManager {
             for (Card c : viewWorkingStack(pWorkingstack)) {
                 s = s + c.toString() + " ";
             }
-
             s = s + "\n";
         }
         return s;

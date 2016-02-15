@@ -22,6 +22,7 @@ public class WorkingStack implements Iterable<Card> {
     }
 
     public Card view() {
+        assert !aWorkingStack.isEmpty();
         return aWorkingStack.peek();
     }
 
