@@ -3,9 +3,14 @@ package solitaire;
 public class StrategyTwo implements PlayStrategy{
 
     @Override
-    public int play(GameModel pGameModel) {
+    public void move(GameModel pGameModel) {
+
+    }
+
+    @Override
+    public boolean hasNextMove(GameModel pGameModel) {
         // TODO Auto-generated method stub
-        return 0;
+        return false;
     }
 
 }

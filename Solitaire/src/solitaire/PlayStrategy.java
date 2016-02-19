@@ -1,5 +1,6 @@
 package solitaire;
 
 public interface PlayStrategy {
-    int play(GameModel pGameModel);
+    void move(GameModel pGameModel);
+    boolean hasNextMove(GameModel pGameModel);
 }

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Stack;
 
 import org.junit.Before;
@@ -14,6 +16,7 @@ import solitaire.Card;
 import solitaire.Deck;
 import solitaire.DeckOrdered;
 import solitaire.GameModel;
+import solitaire.StrategyOne;
 import solitaire.SuitStackManager;
 import solitaire.SuitStackManager.SuitStack;
 import solitaire.WorkingStackManager;
@@ -65,9 +68,9 @@ public class TestGameModel {
             }
             assertEquals(c, aDiscard.peek());
         }
-            assertTrue(aGameModel.isDeckEmpty());
-            assertFalse(aGameModel.isDiscardEmpty());
-        
+        assertTrue(aGameModel.isDeckEmpty());
+        assertFalse(aGameModel.isDiscardEmpty());
+
     }
 
     @Test
@@ -136,6 +139,24 @@ public class TestGameModel {
         c1 = aDiscard.peek();
         aGameModel.undoMoveFromDiscardtoSuitStack(SuitStack.StackDiamonds);
         assertEquals(aDiscard.peek(), Card.flyWeightFactory(Card.Rank.ACE, Card.Suit.DIAMONDS));
+    }
+
+    @Test
+    public void testAutoplay() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        class Fuse {
+            private boolean aTriggered = false;
+        }
+        final Fuse latch = new Fuse();
+        Field playS = aGameModel.getClass().getDeclaredField("aPlayingStrategy");
+        playS.setAccessible(true);
+        playS.set(aGameModel, new StrategyOne() {
+            public void move(GameModel pGameModel) {
+                latch.aTriggered = true;
+            }
+        });
+        aGameModel.autoplay();
+        assertTrue(latch.aTriggered);
+
     }
 
 }

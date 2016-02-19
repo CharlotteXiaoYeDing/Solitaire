@@ -17,6 +17,7 @@ public final class GameModel {
     private SuitStackManager aSuitStackManager;
     private Stack<Card> aDiscard;
     private UndoManager aUndoManager = new UndoManager();
+    private PlayStrategy aPlayingStrategy = new StrategyOne();
 
     private GameModel() {
     }
@@ -28,8 +29,12 @@ public final class GameModel {
    ;
         for (int i = 0; i < 10000; i++)
         {
-            
-            int score = GameModel.getInstance().autoplay(new StrategyOne());
+            GameModel.getInstance().reset();
+            while (GameModel.getInstance().hasNextMove())
+            {
+                GameModel.getInstance().autoplay();
+            }
+            int score = GameModel.getInstance().getScore();
             sum = sum + score;
             if (score > max)
             {
@@ -46,6 +51,11 @@ public final class GameModel {
         return INSTANCE;
     }
 
+    public boolean hasNextMove()
+    {
+        return aPlayingStrategy.hasNextMove(GameModel.getInstance());
+    }
+    
     /**
      * Initiate a new deck and shuffle it, set the first card of the deck to be
      * visible Initiate an empty stack as discard deck Initiate WorkingStack and
@@ -74,8 +84,8 @@ public final class GameModel {
         aDeck.add(aDiscard.pop());
     }
 
-    public int autoplay(PlayStrategy pStrategy) {
-        return pStrategy.play(this);
+    public void autoplay() {
+         aPlayingStrategy.move(this);
     }
 
     public boolean isDeckEmpty() {

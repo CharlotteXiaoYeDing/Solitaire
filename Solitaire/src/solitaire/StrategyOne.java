@@ -15,16 +15,16 @@ public class StrategyOne implements PlayStrategy {
     }
 
     @Override
-    public int play(GameModel pGameModel) {
-        pGameModel.reset();
-       collectPossibleMove(pGameModel);
-       while (!possibleMove.isEmpty())
-       {
-           possibleMove.pop().move(pGameModel);
-           collectPossibleMove(pGameModel);
-       }
-       return pGameModel.getScore();
-
+    public void move(GameModel pGameModel) {
+        assert hasNextMove(pGameModel);
+        collectPossibleMove(pGameModel);
+        possibleMove.pop().move(pGameModel);
+    }
+    
+    public boolean hasNextMove(GameModel pGameModel)
+    {
+        collectPossibleMove(pGameModel);
+        return !possibleMove.isEmpty();
     }
     
     public void collectPossibleMove(GameModel pGameModel)
