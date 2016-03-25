@@ -14,8 +14,21 @@ public class WorkingStackManager {
     public WorkingStackManager(Deck deck) {
         for (int i = 0; i < aWorkingStack.length; i++) {
             aWorkingStack[i] = new WorkingStack(deck, (Workingstack.StackOne.ordinal() + 1 + i));
-            aWorkingStack[i].view().setVisibility(true);
         }
+    }
+    
+    public Location getLocation(Card pCard)
+    {
+        int index = 0;
+        for (WorkingStack aws: aWorkingStack)
+        {
+            if (pCard.equals(aws.view()))
+            {
+                return WorkingStackManager.Workingstack.values()[index];
+            }
+            index++;
+        }
+        return null;
     }
 
     public boolean canAdd(Card pCard, Workingstack workingstack) {
@@ -25,10 +38,10 @@ public class WorkingStackManager {
                 return true;
             }
         } else {
-            if ((pCard.getSuit().ordinal() + aWorkingStack[workingstack.ordinal()].view().getSuit().ordinal())
+            if ((pCard.getSuit().ordinal() + aWorkingStack[workingstack.ordinal()].view().getCard().getSuit().ordinal())
                     % 2 != 0) {
                 if (pCard.getRank()
-                        .ordinal() == (aWorkingStack[workingstack.ordinal()].view().getRank().ordinal() - 1)) {
+                        .ordinal() == (aWorkingStack[workingstack.ordinal()].view().getCard().getRank().ordinal() - 1)) {
                     return true;
                 }
             }
@@ -38,13 +51,15 @@ public class WorkingStackManager {
 
     public void add(Card pCard, Workingstack workingstack) {
         assert canAdd(pCard, workingstack);
-        aWorkingStack[workingstack.ordinal()].add(pCard);
+        CardView aCardView = new CardView(pCard);
+        aCardView.setVisibility(true);
+        aWorkingStack[workingstack.ordinal()].add(aCardView);
 
     }
 
     public Card draw(Workingstack workingstack) {
         assert canDraw(workingstack);
-        Card aCard = aWorkingStack[workingstack.ordinal()].draw();
+        Card aCard = aWorkingStack[workingstack.ordinal()].draw().getCard();
         if ((!aWorkingStack[workingstack.ordinal()].isEmpty())) {
             aWorkingStack[workingstack.ordinal()].view().setVisibility(true);
         }
@@ -54,10 +69,10 @@ public class WorkingStackManager {
     public Stack<Card> drawMultiple(Card pCard, Workingstack workingstack) {
         assert canDrawMultiple(pCard, workingstack);
         Stack<Card> aStack = new Stack<>();
-        while (pCard != aWorkingStack[workingstack.ordinal()].view()) {
-            aStack.add(aWorkingStack[workingstack.ordinal()].draw());
+        while (pCard != aWorkingStack[workingstack.ordinal()].view().getCard()) {
+            aStack.add(aWorkingStack[workingstack.ordinal()].draw().getCard());
         }
-        aStack.add(aWorkingStack[workingstack.ordinal()].draw());
+        aStack.add(aWorkingStack[workingstack.ordinal()].draw().getCard());
         if (!aWorkingStack[workingstack.ordinal()].isEmpty())
         {
             aWorkingStack[workingstack.ordinal()].view().setVisibility(true);
@@ -68,7 +83,9 @@ public class WorkingStackManager {
     public void addMultiple(Stack<Card> aStack, Workingstack workingstack) {
         assert canAdd(aStack.lastElement(), workingstack);
         while (!aStack.isEmpty()) {
-            aWorkingStack[workingstack.ordinal()].add(aStack.pop());
+            CardView aCardView = new CardView(aStack.pop());
+            aCardView.setVisibility(true);
+            aWorkingStack[workingstack.ordinal()].add(aCardView);
         }
     }
 
@@ -89,9 +106,9 @@ public class WorkingStackManager {
     public Stack<Card> viewWorkingStack(Workingstack pWorkingstack) {
         Stack<Card> visibleCard = new Stack<>();
         WorkingStack aWorkingstack = aWorkingStack[pWorkingstack.ordinal()];
-        for (Card aCard : aWorkingstack) {
+        for (CardView aCard : aWorkingstack) {
             if (aCard.isVisible()) {
-                visibleCard.push(aCard);
+                visibleCard.push(aCard.getCard());
             }
         }
         return visibleCard;

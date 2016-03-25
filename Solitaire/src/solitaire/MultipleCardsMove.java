@@ -5,7 +5,8 @@ public class MultipleCardsMove implements Move {
     private Location aSource;
     private Location aDestination;
     private Card aCard;
-    
+    GameModel aGameModel;
+
     public Location getaSource() {
         return aSource;
     }
@@ -18,28 +19,29 @@ public class MultipleCardsMove implements Move {
         return aCard;
     }
 
-    public MultipleCardsMove(Location pSource, Location pDestination, Card pCard) {
+    public MultipleCardsMove(Location pSource, Location pDestination, Card pCard, GameModel pGameModel) {
         aSource = pSource;
         aDestination = pDestination;
         aCard = pCard;
+        aGameModel = pGameModel;
     }
 
     @Override
-    public void move(GameModel pGameModel) {
-        assert isLegalized(pGameModel);
-        pGameModel.moveFromWorkingStacktoWorkingStack(aSource, aCard, aDestination);
-        pGameModel.logMove(this);
+    public void move() {
+        assert isLegalized();
+        aGameModel.moveFromWorkingStacktoWorkingStack(aSource, aCard, aDestination);
+        aGameModel.logMove(this);
     }
 
     @Override
-    public boolean isLegalized(GameModel pGameModel) {
-        return pGameModel.canMoveFromWorkingStacktoWorkingStack(aSource, aCard, aDestination);
+    public boolean isLegalized() {
+        return aGameModel.canMoveFromWorkingStacktoWorkingStack(aSource, aCard, aDestination);
     }
 
     @Override
-    public void undo(GameModel pGameModel) {
-        MultipleCardsMove aMove= new MultipleCardsMove(aDestination, aSource, aCard);
-        aMove.move(pGameModel);
+    public void undo() {
+        MultipleCardsMove aMove = new MultipleCardsMove(aDestination, aSource, aCard, aGameModel);
+        aMove.move();
     }
 
 }

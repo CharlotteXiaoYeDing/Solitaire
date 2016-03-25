@@ -23,12 +23,6 @@ public class TestSuitStackManager {
     
     @Test
     public void testAdd() {
-        c1.setVisibility(true);
-        c2.setVisibility(true);
-        c3.setVisibility(true);
-        c4.setVisibility(true);
-        c5.setVisibility(true);
-        c6.setVisibility(true);
         assertFalse(aManager.canAdd(c1));
         assertTrue(aManager.canAdd(c2));
         assertTrue(aManager.canAdd(c3));

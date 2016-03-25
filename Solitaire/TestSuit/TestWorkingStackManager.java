@@ -62,10 +62,7 @@ public class TestWorkingStackManager {
     }
 
     @Test
-    public void testAddDraw() {
-        for (Card aCard : aDeck) {
-            aCard.setVisibility(true);
-        }   
+    public void testAddDraw() { 
         Card c1 = aDeck.draw();
         assertTrue(wst.canAdd(c1, (WorkingStackManager.Workingstack.StackFive)));
         wst.add(c1, (WorkingStackManager.Workingstack.StackFive));
@@ -79,7 +76,6 @@ public class TestWorkingStackManager {
         assertFalse(wst.canAdd(aDeck.draw(), (WorkingStackManager.Workingstack.StackFour)));
         Card c2 = wst.viewWorkingStack(WorkingStackManager.Workingstack.StackTwo).peek();
         assertTrue(wst.canDraw((WorkingStackManager.Workingstack.StackTwo)));
-        assertTrue(wst.viewWorkingStack(Workingstack.StackTwo).peek().isVisible());
         wst.draw((WorkingStackManager.Workingstack.StackTwo));
         assertNotEquals(c2, wst.viewWorkingStack(WorkingStackManager.Workingstack.StackTwo).peek());
         assertTrue(wst.canDraw((WorkingStackManager.Workingstack.StackTwo)));

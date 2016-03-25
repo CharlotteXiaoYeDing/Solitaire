@@ -50,7 +50,6 @@ public class TestGameModel {
         aDiscard = (Stack<Card>) fDiscard.get(aGameModel);
         assertFalse(aGameModel.isDeckEmpty());
         assertTrue(aGameModel.isDiscardEmpty());
-        assertTrue(aDeck.peek().isVisible());
         assertNotNull(aWorkingStackManager);
         assertNotNull(aSuitStackManager);
     }
@@ -60,7 +59,6 @@ public class TestGameModel {
         aDeck.reset();
         aDeck.shuffle();
         while (!aGameModel.isDeckEmpty()) {
-            assertTrue(aDeck.peek().isVisible());
             Card c = aDeck.peek();
             aGameModel.discard();
             if (!aGameModel.isDeckEmpty()) {
@@ -84,7 +82,6 @@ public class TestGameModel {
             assertNotEquals(c, aDiscard.peek());
         }
         assertEquals(c, aDeck.peek());
-        assertTrue(aDeck.peek().isVisible());
     }
 
     @Test

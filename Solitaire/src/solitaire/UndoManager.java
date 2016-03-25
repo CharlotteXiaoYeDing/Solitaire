@@ -1,34 +1,32 @@
 package solitaire;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class UndoManager implements Move {
 
     Stack<Move> aHistory = new Stack<>();
+    GameModel aGameModel;
 
     public void addMove(Move pMove) {
         aHistory.add(pMove);
     }
 
-    public UndoManager() {
+    public UndoManager(GameModel pGameModel) {
+        aGameModel = pGameModel;
     }
 
     @Override
-    public boolean isLegalized(GameModel pGameModel) {
+    public boolean isLegalized() {
         return aHistory.isEmpty();
     }
 
-    public void undo(GameModel pGameModel) {
-        assert isLegalized(pGameModel);
-        aHistory.pop().undo(pGameModel);
+    public void undo() {
+        assert isLegalized();
+        aHistory.pop().undo();
     }
 
     @Override
-    public void move(GameModel pGameModel) {
+    public void move() {
         throw new UnsupportedOperationException();
-
     }
-
 }

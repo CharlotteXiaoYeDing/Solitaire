@@ -3,25 +3,28 @@ package solitaire;
 import java.util.Iterator;
 import java.util.Stack;
 
-public class WorkingStack implements Iterable<Card> {
-    private final Stack<Card> aWorkingStack = new Stack<>();
+public class WorkingStack implements Iterable<CardView> {
+    private final Stack<CardView> aWorkingStack = new Stack<>();
 
     public WorkingStack(Deck deck, int num) {
         for (int i = 0; i < num; i++) {
-            aWorkingStack.add(deck.draw());
+            aWorkingStack.add(new CardView(deck.draw()));
         }
+        aWorkingStack.get(num-1).setVisibility(true);
+        
     }
 
-    public void add(Card pCard) {
+    public void add(CardView pCard) {
         aWorkingStack.add(pCard);
 
     }
 
-    public Card draw() {
+    public CardView draw() {
+        assert !aWorkingStack.isEmpty();
         return aWorkingStack.pop();
     }
 
-    public Card view() {
+    public CardView view() {
         assert !aWorkingStack.isEmpty();
         return aWorkingStack.peek();
     }
@@ -31,7 +34,7 @@ public class WorkingStack implements Iterable<Card> {
     }
 
     @Override
-    public Iterator<Card> iterator() {
+    public Iterator<CardView> iterator() {
         return aWorkingStack.iterator();
     }
 }

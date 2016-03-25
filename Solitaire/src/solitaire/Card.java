@@ -22,7 +22,6 @@ public class Card {
     private static Card[][] aFlyWeight = new Card[Suit.values().length][Rank.values().length];
     private Rank aRank; // Invariant: != null
     private Suit aSuit; // Invariant: != null
-    private boolean aVisible;
 
     /**
      * @param pRank
@@ -35,15 +34,6 @@ public class Card {
         assert pRank != null && pSuit != null;
         aRank = pRank;
         aSuit = pSuit;
-        aVisible = false;
-    }
-
-    public void setVisibility(boolean pVisibility) {
-        aVisible = pVisibility;
-    }
-
-    public boolean isVisible() {
-        return aVisible;
     }
 
     /**
@@ -52,7 +42,6 @@ public class Card {
      * @post return != null
      */
     public Rank getRank() {
-        assert aVisible;
         return aRank;
     }
 
@@ -62,10 +51,22 @@ public class Card {
      * @post return != null
      */
     public Suit getSuit() {
-        assert aVisible;
         return aSuit;
     }
 
+    public static Card get( String pId )
+    {
+        assert pId != null;
+        int id = Integer.parseInt(pId);
+        return flyWeightFactory(Rank.values()[id % Rank.values().length],
+                Suit.values()[id / Rank.values().length]);
+    }
+    
+    public String getIDString()
+    {
+        return Integer.toString(getSuit().ordinal() * Rank.values().length + getRank().ordinal());
+    }
+    
     @Override
     public String toString() {
         return aRank + " of " + aSuit;

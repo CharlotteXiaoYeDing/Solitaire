@@ -1,23 +1,28 @@
 package solitaire;
 
-public class DiscardMove implements Move{
+public class DiscardMove implements Move {
 
-    @Override
-    public void move(GameModel pGameModel) {
-        assert isLegalized(pGameModel);
-        pGameModel.discard(); 
-        pGameModel.logMove(this);
+    GameModel aGameModel;
+
+    public DiscardMove(GameModel pGameModel) {
+        aGameModel = pGameModel;
     }
 
     @Override
-    public boolean isLegalized(GameModel pGameModel) {
-        return !pGameModel.isDeckEmpty();
+    public void move() {
+        assert isLegalized();
+        aGameModel.discard();
+        aGameModel.logMove(this);
     }
 
     @Override
-    public void undo(GameModel pGameModel) {
-        pGameModel.undoDiscard();
+    public boolean isLegalized() {
+        return !aGameModel.isDeckEmpty();
     }
 
+    @Override
+    public void undo() {
+        aGameModel.undoDiscard();
+    }
 
 }

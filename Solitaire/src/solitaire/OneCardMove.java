@@ -7,61 +7,62 @@ public class OneCardMove implements Move {
 
     private Location aSource;
     private Location aDestination;
+    GameModel aGameModel;
 
-    public OneCardMove(Location pSource, Location pDestination) {
+    public OneCardMove(Location pSource, Location pDestination, GameModel pGameModel) {
         aSource = pSource;
         aDestination = pDestination;
+        aGameModel = pGameModel;
     }
 
     @Override
-    public void move(GameModel pGameModel) {
-        assert isLegalized(pGameModel);
+    public void move() {
+        assert isLegalized();
         if (aSource instanceof SuitStack && aDestination instanceof WorkingStack) {
-            pGameModel.moveFromSuitStacktoWorkingStack(aSource, aDestination);
+            aGameModel.moveFromSuitStacktoWorkingStack(aSource, aDestination);
         }
         if (aSource instanceof WorkingStack && aDestination instanceof SuitStack) {
-            pGameModel.moveFromWorkingStacktoSuitStack(aSource);
+            aGameModel.moveFromWorkingStacktoSuitStack(aSource);
         }
         if (aSource instanceof CardDeck && aDestination instanceof SuitStack) {
-            pGameModel.moveFromDiscardtoSuitStack();
+            aGameModel.moveFromDiscardtoSuitStack();
         }
         if (aSource instanceof CardDeck && aDestination instanceof WorkingStack) {
-            pGameModel.moveFromDiscardtoWorkingStack(aDestination);
+            aGameModel.moveFromDiscardtoWorkingStack(aDestination);
         }
-        pGameModel.logMove(this);
+        aGameModel.logMove(this);
     }
 
     @Override
-    public boolean isLegalized(GameModel pGameModel) {
+    public boolean isLegalized() {
         if (aSource instanceof SuitStack && aDestination instanceof WorkingStack) {
-            return pGameModel.canMoveFromSuitStacktoWorkingStack(aSource, aDestination);
+            return aGameModel.canMoveFromSuitStacktoWorkingStack(aSource, aDestination);
         }
         if (aSource instanceof WorkingStack && aDestination instanceof SuitStack) {
-            return pGameModel.canMoveFromWorkingStacktoSuitStack(aSource);
+            return aGameModel.canMoveFromWorkingStacktoSuitStack(aSource);
         }
         if (aSource instanceof CardDeck && aDestination instanceof SuitStack) {
-            return pGameModel.canMoveFromDiscardtoSuitStack();
+            return aGameModel.canMoveFromDiscardtoSuitStack();
         }
         if (aSource instanceof CardDeck && aDestination instanceof WorkingStack) {
-            return pGameModel.canMoveFromDiscardtoWorkingStack(aDestination);
+            return aGameModel.canMoveFromDiscardtoWorkingStack(aDestination);
         }
         return false;
     }
 
     @Override
-    public void undo(GameModel pGameModel) {
+    public void undo() {
         if (aSource instanceof SuitStack && aDestination instanceof WorkingStack) {
-            pGameModel.moveFromWorkingStacktoSuitStack(aDestination);
+            aGameModel.moveFromWorkingStacktoSuitStack(aDestination);
         }
         if (aSource instanceof WorkingStack && aDestination instanceof SuitStack) {
-            pGameModel.moveFromSuitStacktoWorkingStack(aDestination, aSource);
+            aGameModel.moveFromSuitStacktoWorkingStack(aDestination, aSource);
         }
         if (aSource instanceof CardDeck && aDestination instanceof SuitStack) {
-            pGameModel.undoMoveFromDiscardtoSuitStack(aDestination);
+            aGameModel.undoMoveFromDiscardtoSuitStack(aDestination);
         }
         if (aSource instanceof CardDeck && aDestination instanceof WorkingStack) {
-            pGameModel.undoMoveFromDiscardtoWorkingStack(aDestination);
+            aGameModel.undoMoveFromDiscardtoWorkingStack(aDestination);
         }
     }
-
 }

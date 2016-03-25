@@ -9,7 +9,7 @@ import solitaire.WorkingStackManager.Workingstack;
 public class StrategyOne implements PlayStrategy {
 
     Stack<Move> possibleMove;
-    
+
     public StrategyOne() {
 
     }
@@ -18,68 +18,58 @@ public class StrategyOne implements PlayStrategy {
     public void move(GameModel pGameModel) {
         assert hasNextMove(pGameModel);
         collectPossibleMove(pGameModel);
-        possibleMove.pop().move(pGameModel);
+        possibleMove.pop().move();
     }
-    
-    public boolean hasNextMove(GameModel pGameModel)
-    {
+
+    public boolean hasNextMove(GameModel pGameModel) {
         collectPossibleMove(pGameModel);
         return !possibleMove.isEmpty();
     }
-    
-    public void collectPossibleMove(GameModel pGameModel)
-    {
+
+    public void collectPossibleMove(GameModel pGameModel) {
         possibleMove = new Stack<>();
-        if ((new DiscardMove()).isLegalized(pGameModel))
-        {
-            possibleMove.push(new DiscardMove());
+        Move aMove = new DiscardMove(pGameModel);
+        if (aMove.isLegalized()) {
+            possibleMove.push(aMove);
         }
-        for (Workingstack aWorkingStack: Workingstack.values())
-        {
-            Stack<Card> aStack= pGameModel.viewWorkingStack(aWorkingStack);
-            for (Workingstack aWorkingStack1: Workingstack.values())
-            {
-                if (aWorkingStack == aWorkingStack1)
-                {
+        for (Workingstack aWorkingStack : Workingstack.values()) {
+            Stack<Card> aStack = pGameModel.viewWorkingStack(aWorkingStack);
+            for (Workingstack aWorkingStack1 : Workingstack.values()) {
+                if (aWorkingStack == aWorkingStack1) {
                     break;
                 }
-                for (Card aCard: aStack)
-                {
-                    if (new MultipleCardsMove(aWorkingStack, aWorkingStack1, aCard).isLegalized(pGameModel))
-                    {
-                        possibleMove.push(new MultipleCardsMove(aWorkingStack, aWorkingStack1, aCard));
+                for (Card aCard : aStack) {
+                    aMove = new MultipleCardsMove(aWorkingStack, aWorkingStack1, aCard, pGameModel);
+                    if (aMove.isLegalized()) {
+                        possibleMove.push(aMove);
                     }
                 }
             }
         }
-        for (Workingstack aWorkingStack: Workingstack.values())
-        {
-            if (new OneCardMove(CardDeck.DISCARD, aWorkingStack).isLegalized(pGameModel))
-            {
-                possibleMove.push(new OneCardMove(CardDeck.DISCARD, aWorkingStack));
+        for (Workingstack aWorkingStack : Workingstack.values()) {
+            aMove = new OneCardMove(CardDeck.DISCARD, aWorkingStack, pGameModel);
+            if (aMove.isLegalized()) {
+                possibleMove.push(aMove);
             }
         }
-        for (Workingstack aWorkingStack: Workingstack.values())
-        {
-            for (SuitStack aSuitStack: SuitStack.values())
-            {
-                if (new OneCardMove(aWorkingStack, aSuitStack).isLegalized(pGameModel))
-                {
-                    possibleMove.push(new OneCardMove(aWorkingStack, aSuitStack));
+        for (Workingstack aWorkingStack : Workingstack.values()) {
+            for (SuitStack aSuitStack : SuitStack.values()) {
+                aMove = new OneCardMove(aWorkingStack, aSuitStack, pGameModel);
+                if (aMove.isLegalized()) {
+                    possibleMove.push(aMove);
                 }
-                if (new OneCardMove(aSuitStack, aWorkingStack).isLegalized(pGameModel))
-                {
-                    possibleMove.push(new OneCardMove(aSuitStack, aWorkingStack));
+                aMove = new OneCardMove(aSuitStack, aWorkingStack, pGameModel);
+                if (aMove.isLegalized()) {
+                    possibleMove.push(aMove);
                 }
             }
         }
-        for (SuitStack aSuitStack: SuitStack.values())
-        {
-            if (new OneCardMove(CardDeck.DISCARD, aSuitStack).isLegalized(pGameModel))
-            {
-                possibleMove.push(new OneCardMove(CardDeck.DISCARD, aSuitStack));
+        for (SuitStack aSuitStack : SuitStack.values()) {
+            aMove = new OneCardMove(CardDeck.DISCARD, aSuitStack, pGameModel);
+            if (aMove.isLegalized()) {
+                possibleMove.push(aMove);
             }
         }
-        
+
     }
 }
