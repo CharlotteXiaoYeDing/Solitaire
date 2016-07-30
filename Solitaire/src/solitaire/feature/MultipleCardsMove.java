@@ -1,4 +1,8 @@
-package solitaire;
+package solitaire.feature;
+
+import solitaire.GameModel.GameModel;
+import solitaire.internal.Card;
+import solitaire.internal.Location;
 
 public class MultipleCardsMove implements Move {
 
@@ -27,21 +31,19 @@ public class MultipleCardsMove implements Move {
     }
 
     @Override
-    public void move() {
-        assert isLegalized();
-        aGameModel.moveFromWorkingStacktoWorkingStack(aSource, aCard, aDestination);
-        aGameModel.logMove(this);
+    public boolean move() {
+    	  boolean success = aGameModel.move(aSource,  aDestination,aCard);
+          if (success)
+          {
+          	 aGameModel.logMove(this);
+          	 return true;
+          }
+          return false;
     }
 
     @Override
-    public boolean isLegalized() {
-        return aGameModel.canMoveFromWorkingStacktoWorkingStack(aSource, aCard, aDestination);
-    }
-
-    @Override
-    public void undo() {
-        MultipleCardsMove aMove = new MultipleCardsMove(aDestination, aSource, aCard, aGameModel);
-        aMove.move();
+    public boolean undo() {
+    	return aGameModel.undo(aSource,  aDestination,aCard);
     }
 
 }

@@ -1,21 +1,16 @@
-package solitaire;
-
-import solitaire.Card.Suit;
-import solitaire.SuitStackManager.SuitStack;
+package solitaire.internal;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import solitaire.internal.Card.Suit;
+
 public class SuitStackManager {
-    private final Map<SuitStack, Card> aSuitStackManager;
+    private final Map<SuitStack, Card> aSuitStackManager = new HashMap<>();
     
     public enum SuitStack implements Location
     {
         StackClubs, StackDiamonds, StackSpades, SuitHearts
-    }
-
-    public SuitStackManager() {
-        aSuitStackManager = new HashMap<>();
     }
 
     public Card viewSuitStack(SuitStack pSuitStack) {

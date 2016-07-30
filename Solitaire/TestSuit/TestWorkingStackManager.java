@@ -6,13 +6,13 @@ import java.util.Stack;
 import org.junit.Before;
 import org.junit.Test;
 
-import solitaire.Card;
-import solitaire.Deck;
 import solitaire.DeckOrdered;
-import solitaire.GameModel;
-import solitaire.WorkingStack;
-import solitaire.WorkingStackManager;
-import solitaire.WorkingStackManager.Workingstack;
+import solitaire.GameModel.GameModel;
+import solitaire.internal.Card;
+import solitaire.internal.Deck;
+import solitaire.internal.WorkingStack;
+import solitaire.internal.WorkingStackManager;
+import solitaire.internal.WorkingStackManager.Workingstack;
 
 public class TestWorkingStackManager {
     WorkingStackManager wst;

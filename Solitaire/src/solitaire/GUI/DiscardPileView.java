@@ -1,4 +1,4 @@
-package solitaire;
+package solitaire.GUI;
 
 /*******************************************************************************
  * Solitaire
@@ -25,17 +25,20 @@ package solitaire;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import solitaire.GameModel.GameModel;
+import solitaire.GameModel.GameModelListener;
+import solitaire.internal.Card;
 
 /**
  * Component that shows the state of the discard pile and allows
  * dragging cards from it.
  */
-class DiscardPileView extends HBox implements GameModelListener
+public class DiscardPileView extends HBox implements GameModelListener
 {
     private static final int PADDING = 5;
     private CardDragHandler aDragHandler;
     
-    DiscardPileView()
+    public DiscardPileView()
     {
         setPadding(new Insets(PADDING));
         final ImageView image = new ImageView(CardImages.getBack());

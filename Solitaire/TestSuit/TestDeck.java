@@ -2,8 +2,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import solitaire.Card;
-import solitaire.Deck;
+import solitaire.internal.Card;
+import solitaire.internal.Deck;
 
 public class TestDeck {
 

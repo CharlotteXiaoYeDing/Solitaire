@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import solitaire.Card;
-import solitaire.SuitStackManager;
-import solitaire.Card.Suit;
+import solitaire.internal.Card;
+import solitaire.internal.SuitStackManager;
+import solitaire.internal.Card.Suit;
 
 public class TestSuitStackManager {
 

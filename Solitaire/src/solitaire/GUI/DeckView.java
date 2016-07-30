@@ -1,4 +1,4 @@
-package solitaire;
+package solitaire.GUI;
 
 import javafx.event.EventHandler;
 import javafx.geometry.VPos;
@@ -11,20 +11,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import solitaire.GameModel.GameModel;
+import solitaire.GameModel.GameModelListener;
 
 /**
  * Component that shows the deck and allows clicking
  * it to draw cards. Listens to game model state changes
  * and updates itself to disappear if it is empty.
  */
-class DeckView extends HBox implements GameModelListener
+public class DeckView extends HBox implements GameModelListener
 {
     private static final String BUTTON_STYLE_NORMAL = "-fx-background-color: transparent; -fx-padding: 5, 5, 5, 5;";
     private static final String BUTTON_STYLE_PRESSED = "-fx-background-color: transparent; -fx-padding: 6 4 4 6;";
     private static final int IMAGE_NEW_LINE_WIDTH = 10;
     private static final int IMAGE_FONT_SIZE = 15;
     
-    DeckView()
+    public DeckView()
     {
         final Button button = new Button();
         button.setGraphic(new ImageView(CardImages.getBack()));

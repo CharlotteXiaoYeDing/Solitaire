@@ -1,9 +1,10 @@
-package solitaire;
+package solitaire.GUI;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.image.Image;
+import solitaire.internal.Card;
 
 /**
  * A class to store and manage images of the 52 cards.

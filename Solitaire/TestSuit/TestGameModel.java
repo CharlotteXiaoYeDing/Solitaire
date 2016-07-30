@@ -12,15 +12,15 @@ import java.util.Stack;
 import org.junit.Before;
 import org.junit.Test;
 
-import solitaire.Card;
-import solitaire.Deck;
 import solitaire.DeckOrdered;
-import solitaire.GameModel;
-import solitaire.StrategyOne;
-import solitaire.SuitStackManager;
-import solitaire.SuitStackManager.SuitStack;
-import solitaire.WorkingStackManager;
-import solitaire.WorkingStackManager.Workingstack;
+import solitaire.GameModel.GameModel;
+import solitaire.internal.Card;
+import solitaire.internal.Deck;
+import solitaire.internal.SuitStackManager;
+import solitaire.internal.WorkingStackManager;
+import solitaire.internal.SuitStackManager.SuitStack;
+import solitaire.internal.WorkingStackManager.Workingstack;
+import solitaire.strategy.StrategyOne;
 
 public class TestGameModel {
 

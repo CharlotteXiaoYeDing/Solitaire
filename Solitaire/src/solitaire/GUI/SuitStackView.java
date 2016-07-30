@@ -1,6 +1,9 @@
-package solitaire;
+package solitaire.GUI;
 
-import solitaire.SuitStackManager.SuitStack;
+import solitaire.GameModel.GameModel;
+import solitaire.GameModel.GameModelListener;
+import solitaire.internal.Card;
+import solitaire.internal.SuitStackManager.SuitStack;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
@@ -22,7 +25,7 @@ public class SuitStackView extends StackPane implements GameModelListener {
     private CardDragHandler aDragHandler;
     private SuitStack aIndex;
     
-    SuitStackView(SuitStack pIndex)
+    public SuitStackView(SuitStack pIndex)
     {
         aIndex = pIndex;
         setPadding(new Insets(PADDING));
@@ -115,10 +118,7 @@ public class SuitStackView extends StackPane implements GameModelListener {
                 if(db.hasString()) 
                 {
                     CardTransfer transfer = new CardTransfer(pEvent.getDragboard().getString());
-                    if (transfer.size()== 1)
-                    {
-                        GameModel.getInstance().getOneCardMove(transfer.getTop(), aIndex).move();;
-                    } 
+                    GameModel.getInstance().getOneCardMove(transfer.getTop(), aIndex).move();;
                     success = true;
                 }
                 pEvent.setDropCompleted(success);

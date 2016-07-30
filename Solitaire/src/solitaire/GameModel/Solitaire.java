@@ -1,4 +1,4 @@
-package solitaire;
+package solitaire.GameModel;
 
 /*******************************************************************************
  * Solitaire
@@ -28,9 +28,13 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import solitaire.Card.Suit;
-import solitaire.SuitStackManager.SuitStack;
-import solitaire.WorkingStackManager.Workingstack;
+import solitaire.GUI.DeckView;
+import solitaire.GUI.DiscardPileView;
+import solitaire.GUI.SuitStackView;
+import solitaire.GUI.WorkingStackView;
+import solitaire.internal.Card.Suit;
+import solitaire.internal.SuitStackManager.SuitStack;
+import solitaire.internal.WorkingStackManager.Workingstack;
 
 /**
  * Application class for Solitaire. The responsibility
@@ -50,7 +54,7 @@ public class Solitaire extends Application
     private DeckView aDeckView = new DeckView();
     private DiscardPileView aDiscardPileView = new DiscardPileView();
     private SuitStackView[] aSuitStacks = new SuitStackView[Suit.values().length];
-//    private WorkingStack[] aStacks = new WorkingStack[Workingstack.values().length];
+    private WorkingStackView[] aStacks = new WorkingStackView[Workingstack.values().length];
     
     /**
      * Launches the application.
@@ -77,17 +81,17 @@ public class Solitaire extends Application
         root.add(aDeckView, 0, 0);
         root.add(aDiscardPileView, 1, 0);
                 
-//        for( SuitStack index : SuitStack.values() )
-//        {
-//            aSuitStacks[index.ordinal()] = new SuitStackView(index);
-//            root.add(aSuitStacks[index.ordinal()], index.ordinal(), 0);
-//        }
+        for( SuitStack index : SuitStack.values() )
+        {
+            aSuitStacks[index.ordinal()] = new SuitStackView(index);
+            root.add(aSuitStacks[index.ordinal()], 3+index.ordinal(), 0);
+        }
       
-//        for( Workingstack index : Workingstack.values() )
-//        {
-//            aStacks[index.ordinal()] = new CardStack(index);
-//            root.add(aStacks[index.ordinal()], index.ordinal(), 1);
-//        }
+        for( Workingstack index : Workingstack.values() )
+        {
+            aStacks[index.ordinal()] = new WorkingStackView(index);
+            root.add(aStacks[index.ordinal()], index.ordinal(), 1);
+        }
         
 //        root.setOnKeyTyped(new EventHandler<KeyEvent>()
 //        {

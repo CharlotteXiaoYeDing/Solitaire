@@ -1,6 +1,8 @@
-package solitaire;
+package solitaire.feature;
 
 import java.util.Stack;
+
+import solitaire.GameModel.GameModel;
 
 public class UndoManager implements Move {
 
@@ -15,18 +17,16 @@ public class UndoManager implements Move {
         aGameModel = pGameModel;
     }
 
-    @Override
-    public boolean isLegalized() {
-        return aHistory.isEmpty();
-    }
-
-    public void undo() {
-        assert isLegalized();
-        aHistory.pop().undo();
+    public boolean undo() {
+        if(! aHistory.isEmpty())
+        {
+        	 aHistory.pop().undo();
+        }
+       return false;
     }
 
     @Override
-    public void move() {
+    public boolean move() {
         throw new UnsupportedOperationException();
     }
 }

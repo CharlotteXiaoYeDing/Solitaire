@@ -1,10 +1,11 @@
-package solitaire;
+package solitaire.internal;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Stack;
-import solitaire.Card.Suit;
-import solitaire.Card.Rank;
+
+import solitaire.internal.Card.Rank;
+import solitaire.internal.Card.Suit;
 
 /**
  * An Iterable implementation of cards.

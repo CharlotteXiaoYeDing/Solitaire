@@ -1,4 +1,7 @@
-package solitaire;
+package solitaire.GUI;
+
+import solitaire.internal.Card;
+
 /**
  * An immutable utility object to facilitate the transfer of card 
  * through the drag board (drag and drop space).

@@ -1,4 +1,6 @@
-package solitaire;
+package solitaire.GUI;
+
+import solitaire.internal.Card;
 
 public class CardView {
     private Card aCard;
@@ -9,7 +11,7 @@ public class CardView {
         aCard = pCard;
     }
 
-    public boolean isVisible()
+    public boolean getVisibility()
     {
         return aVisibility;
     }

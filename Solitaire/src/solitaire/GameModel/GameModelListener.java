@@ -1,4 +1,4 @@
-package solitaire;
+package solitaire.GameModel;
 
 public interface GameModelListener {
 

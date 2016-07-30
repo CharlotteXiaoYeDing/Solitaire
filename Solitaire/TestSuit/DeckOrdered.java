@@ -1,9 +1,6 @@
-package solitaire;
 
-import java.util.Stack;
 
-import solitaire.Card.Rank;
-import solitaire.Card.Suit;
+import solitaire.internal.Deck;
 
 public class DeckOrdered extends Deck {
 

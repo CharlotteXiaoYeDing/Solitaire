@@ -2,7 +2,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import solitaire.Card;
+import solitaire.internal.Card;
 
 public class TestCard {
 

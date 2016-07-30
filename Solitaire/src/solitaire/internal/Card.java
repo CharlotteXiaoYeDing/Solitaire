@@ -1,4 +1,4 @@
-package solitaire;
+package solitaire.internal;
 
 /**
  * @author April
@@ -13,7 +13,6 @@ public class Card {
 
     /**
      * A Card's suit.
-     * 
      */
     public enum Suit {
         CLUBS, DIAMONDS, SPADES, HEARTS
@@ -38,7 +37,6 @@ public class Card {
 
     /**
      * @return the Rank of the card.
-     * @pre can only return Rank if the Card is visible
      * @post return != null
      */
     public Rank getRank() {
@@ -47,24 +45,10 @@ public class Card {
 
     /**
      * @return the Suit of the card.
-     * @pre can only return Suit if the Card is visible
      * @post return != null
      */
     public Suit getSuit() {
         return aSuit;
-    }
-
-    public static Card get( String pId )
-    {
-        assert pId != null;
-        int id = Integer.parseInt(pId);
-        return flyWeightFactory(Rank.values()[id % Rank.values().length],
-                Suit.values()[id / Rank.values().length]);
-    }
-    
-    public String getIDString()
-    {
-        return Integer.toString(getSuit().ordinal() * Rank.values().length + getRank().ordinal());
     }
     
     @Override
@@ -73,7 +57,7 @@ public class Card {
     }
 
     /**
-     * Using FlyWeight Design pattern to ensure the uniqueness of Card
+     * Using FlyWeight Design Pattern to ensure the uniqueness of Card
      * 
      * @param pRank
      *            the Rank of Card to be drawn
@@ -86,5 +70,18 @@ public class Card {
             aFlyWeight[pSuit.ordinal()][pRank.ordinal()] = new Card(pRank, pSuit);
         }
         return aFlyWeight[pSuit.ordinal()][pRank.ordinal()];
+    }
+    
+    public static Card get(String pId)
+    {
+        assert pId != null;
+        int id = Integer.parseInt(pId);
+        return flyWeightFactory(Rank.values()[id % Rank.values().length],
+                Suit.values()[id / Rank.values().length]);
+    }
+    
+    public String getIDString()
+    {
+        return Integer.toString(getSuit().ordinal() * Rank.values().length + getRank().ordinal());
     }
 }
