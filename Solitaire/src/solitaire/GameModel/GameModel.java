@@ -18,7 +18,6 @@ import solitaire.internal.Card.Suit;
 import solitaire.internal.SuitStackManager.SuitStack;
 import solitaire.internal.WorkingStackManager.Workingstack;
 import solitaire.strategy.PlayStrategy;
-import solitaire.strategy.StrategyOne;
 
 public final class GameModel {
 	public enum CardDeck implements Location {
@@ -81,7 +80,7 @@ public final class GameModel {
 
 	public boolean undoDiscard() {
 		if (!aDiscard.isEmpty()) {
-			aDeck.add(aDiscard.pop());
+			aDeck.push(aDiscard.pop());
 			notifyListener();
 			return true;
 		}
@@ -194,31 +193,31 @@ public final class GameModel {
 	
 	
 	
-	
-	
-	public boolean isVisibleInWorkingStack(Card pCard, Workingstack pWorkingstack) {
-		Stack<Card> aVisibleStack = aWorkingStack.viewWorkingStack((Workingstack) pWorkingstack);
-		for (Card card : aVisibleStack) {
-			if (pCard.equals(card)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public Card viewSuitStack(Location pSuitStack) {
-		return aSuitStackManager.viewSuitStack((SuitStack) pSuitStack);
-	}
-
-
-	public Card peekDiscardPile() {
-
-		return aDiscard.peek();
-	}
-
-	public Card[] getWorkingStack(Workingstack aIndex) {
-		return aWorkingStack.getWorkingStack(aIndex);
-	}
+//	
+//	
+//	public boolean isVisibleInWorkingStack(Card pCard, Workingstack pWorkingstack) {
+//		Stack<Card> aVisibleStack = aWorkingStack.viewWorkingStack((Workingstack) pWorkingstack);
+//		for (Card card : aVisibleStack) {
+//			if (pCard.equals(card)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+//
+//	public Card viewSuitStack(Location pSuitStack) {
+//		return aSuitStackManager.viewSuitStack((SuitStack) pSuitStack);
+//	}
+//
+//
+//	public Card peekDiscardPile() {
+//
+//		return aDiscard.peek();
+//	}
+//
+//	public Card[] getWorkingStack(Workingstack aIndex) {
+//		return aWorkingStack.getWorkingStack(aIndex);
+//	}
 
 //	public Stack<Card> viewWorkingStack(Workingstack pWorkingStack) {
 //

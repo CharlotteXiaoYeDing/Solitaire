@@ -55,7 +55,7 @@ public class Deck implements Iterable<Card> {
      * @param pCard
      *            the Card to be added
      */
-    public void add(Card pCard) {
+    public void push(Card pCard) {
         aCards.push(pCard);
     }
 

@@ -13,16 +13,26 @@ public class WorkingStack implements Iterable<Card> {
         }
         aVisible = num-1;
     }
+    
+    public WorkingStack()
+    {
+    	
+    }
+    
+    public int getSize()
+    {
+    	return aWorkingStack.size();
+    }
 
     public void push(Card pCard) {
-        aWorkingStack.add(pCard);
-
+        aWorkingStack.push(pCard);
     }
 
     public Card draw() {
         assert !aWorkingStack.isEmpty();
         if (aVisible == aWorkingStack.size()-1)
         {
+        	
         	aVisible--;
         }
         return aWorkingStack.pop();

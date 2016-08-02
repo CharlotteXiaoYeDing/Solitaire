@@ -37,12 +37,20 @@ public class TestSuitStackManager {
         assertEquals(aManager.viewSuitStack(SuitStackManager.SuitStack.StackDiamonds), null);
         assertEquals(aManager.viewSuitStack(SuitStackManager.SuitStack.StackSpades), c6);
         assertEquals(aManager.getScore(), 3);
+       
+        
+    }
+    
+    @Test
+    public void testDraw() {
+    	aManager.add(c2);
+    	aManager.add(c6);
+        aManager.add(c3);
         assertTrue(aManager.canDraw(SuitStackManager.SuitStack.StackSpades));
         assertEquals((aManager.draw(SuitStackManager.SuitStack.StackSpades)), c6);
         assertTrue(aManager.canDraw(SuitStackManager.SuitStack.StackClubs));
         assertEquals((aManager.draw(SuitStackManager.SuitStack.StackClubs)), c3);
         assertFalse(aManager.canDraw(SuitStackManager.SuitStack.StackDiamonds));
-        
     }
 
 }

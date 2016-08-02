@@ -88,12 +88,28 @@ public class WorkingStackManager {
     
     public Card[] getWorkingStack(Workingstack pWorkingstack)
     {
-        Card[] cardStack = new Card[pWorkingstack.ordinal()];
+
+        Card[] cardStack = new Card[pWorkingstack.ordinal()+1];
         int i = 0;
         for(Card aC: aWorkingStack[pWorkingstack.ordinal()])
         {
             cardStack[i] = aC;
             i++;
+        }
+        return cardStack;
+    }
+    
+    public Card[] getVisibleWorkingStack(Workingstack pWorkingstack)
+    {
+        Card[] cardStack = new Card[pWorkingstack.ordinal()+1];
+        int i = 0;
+        for(Card aC: aWorkingStack[pWorkingstack.ordinal()])
+        {
+        	if (aWorkingStack[pWorkingstack.ordinal()].getVisibility(aC))
+        	{
+        		cardStack[i] = aC;
+                i++;
+        	}
         }
         return cardStack;
     }
