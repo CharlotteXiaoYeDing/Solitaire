@@ -62,6 +62,10 @@ public class WorkingStackManager {
     }
     
     public boolean canDraw(Workingstack workingstack) {
+    	if ( aWorkingStack[workingstack.ordinal()].isEmpty())
+    	{
+    		return false;
+    	}
     	Card card = aWorkingStack[workingstack.ordinal()].peek();
         return aWorkingStack[workingstack.ordinal()].getVisibility(card);
     }
@@ -83,6 +87,10 @@ public class WorkingStackManager {
     }
 
     public boolean canDrawMultiple(Card pCard, Workingstack workingstack) {
+    	if (aWorkingStack[workingstack.ordinal()].isEmpty())
+    	{
+    		return false;
+    	}
         return aWorkingStack[workingstack.ordinal()].getVisibility(pCard);
     }
     
