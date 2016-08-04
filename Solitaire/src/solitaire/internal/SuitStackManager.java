@@ -10,7 +10,7 @@ public class SuitStackManager {
     
     public enum SuitStack implements Location
     {
-        StackClubs, StackDiamonds, StackSpades, SuitHearts
+        StackClubs, StackDiamonds, StackSpades, StackHearts
     }
 
     public Card viewSuitStack(SuitStack pSuitStack) {
