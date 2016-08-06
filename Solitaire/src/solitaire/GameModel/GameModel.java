@@ -54,6 +54,21 @@ public final class GameModel {
 		notifyListener();
 	}
 
+	public boolean isDeckEmpty()
+	{
+		return aDeck.isEmpty();
+	}
+	
+	public boolean isDiscardEmpty()
+	{
+		return aDiscard.isEmpty();
+	}
+	
+	public Card peekDiscard()
+	{
+		return aDiscard.peek();
+	}
+	
 	public int getScore() {
 		return aSuitStackManager.getScore();
 	}
@@ -190,6 +205,11 @@ public final class GameModel {
 			pSource = aWorkingStack.getLocation(pCard);
 		}
 		return new OneCardMove(pSource, pDestination, GameModel.getInstance());
+	}
+
+	public boolean isCompleted() {
+		//To Do
+		return true;
 	}
 
 	//
