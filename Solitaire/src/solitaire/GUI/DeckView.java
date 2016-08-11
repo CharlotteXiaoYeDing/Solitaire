@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import solitaire.GameModel.GameModel;
 import solitaire.GameModel.GameModelListener;
+import solitaire.GameModel.GameModel.CardDeck;
 
 /**
  * Component that shows the deck and allows clicking
@@ -47,13 +48,13 @@ public class DeckView extends HBox implements GameModelListener
     		public void handle(MouseEvent pEvent) 
     		{
     			((Button)pEvent.getSource()).setStyle(BUTTON_STYLE_NORMAL);
-    			if( GameModel.getInstance().isDeckEmpty())
+    			if( !GameModel.getInstance().canDraw(CardDeck.DECK))
     			{
     				GameModel.getInstance().reset();
     			}
     			else
     			{
-    				GameModel.getInstance().discard();
+    				GameModel.getInstance().getDiscardMove().move();
     			}
     		}            
     	});
@@ -75,10 +76,13 @@ public class DeckView extends HBox implements GameModelListener
 		context.strokeOval(width/4, height/2-width/4 + IMAGE_FONT_SIZE, width/2, width/2);
 
 		// The text
+		
 		context.setTextAlign(TextAlignment.CENTER);
 		context.setTextBaseline(VPos.CENTER);
 		context.setFill(Color.DARKKHAKI);
 		context.setFont(Font.font(Font.getDefault().getName(), IMAGE_FONT_SIZE));
+		
+		
 		
 		if( GameModel.getInstance().isCompleted() )
 		{
@@ -95,7 +99,7 @@ public class DeckView extends HBox implements GameModelListener
 	@Override
 	public void gameStateChanged()
 	{
-		if( GameModel.getInstance().isDeckEmpty() )
+		if(!GameModel.getInstance().canDraw(CardDeck.DECK))
 		{
 			((Button)getChildren().get(0)).setGraphic(createNewGameImage());
 		}
@@ -105,7 +109,6 @@ public class DeckView extends HBox implements GameModelListener
 		}
 	}
 	
-	//???
 	public void reset()
 	{
 		getChildren().get(0).setVisible(true);

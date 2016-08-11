@@ -8,6 +8,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import solitaire.GUI.DeckView;
 import solitaire.GUI.DiscardPileView;
+import solitaire.GUI.SuitStackView;
 import solitaire.internal.Card.Suit;
 import solitaire.internal.SuitStackManager.SuitStack;
 import solitaire.internal.WorkingStackManager.Workingstack;
@@ -22,7 +23,7 @@ public class Solitaire extends Application
 
     private DeckView aDeckView = new DeckView();
     private DiscardPileView aDiscardPileView = new DiscardPileView();
-//    private SuitStack[] aSuitStacks = new SuitStack[Suit.values().length];
+    private SuitStackView[] aSuitStacks = new SuitStackView[Suit.values().length];
 //    private CardStack[] aStacks = new CardStack[StackIndex.values().length];
     
 	/**
@@ -48,11 +49,11 @@ public class Solitaire extends Application
         root.add(aDeckView, 0, 0);
         root.add(aDiscardPileView, 1, 0);
                 
-//        for( SuitStackIndex index : SuitStackIndex.values() )
-//        {
-//        	aSuitStacks[index.ordinal()] = new SuitStack(index);
-//        	root.add(aSuitStacks[index.ordinal()], 3+index.ordinal(), 0);
-//        }
+        for( SuitStack index : SuitStack.values() )
+        {
+        	aSuitStacks[index.ordinal()] = new SuitStackView(index);
+        	root.add(aSuitStacks[index.ordinal()], 3+index.ordinal(), 0);
+        }
 //      
 //        for( StackIndex index : StackIndex.values() )
 //        {
