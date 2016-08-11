@@ -13,7 +13,7 @@ public final class CardImages {
 	private static final String IMAGE_LOCATION = "images/";
 	private static final String IMAGE_SUFFIX = ".gif";
 	private static final String[] RANK_CODES = { "a", "2", "3", "4", "5", "6", "7", "8", "9", "t", "j", "q", "k" };
-	private static final String[] SUIT_CODES = { "c", "d", "h", "s" };
+	private static final String[] SUIT_CODES = { "c", "d", "s", "h" };
 
 	private static Map<String, Image> aCards = new HashMap<String, Image>();
 

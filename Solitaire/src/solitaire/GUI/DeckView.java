@@ -29,9 +29,12 @@ public class DeckView extends HBox implements GameModelListener
 	
 	public DeckView()
 	{
+		GameModel.getInstance().reset();
+		
         final Button button = new Button();
         button.setGraphic(new ImageView(CardImages.getBack()));
         button.setStyle(BUTTON_STYLE_NORMAL);
+        
 
     	button.setOnMousePressed(new EventHandler<MouseEvent>() 
     	{
@@ -61,6 +64,7 @@ public class DeckView extends HBox implements GameModelListener
         
         getChildren().add(button);
     	GameModel.getInstance().addListener(this);
+    	
 	}
 	
 	private Canvas createNewGameImage()

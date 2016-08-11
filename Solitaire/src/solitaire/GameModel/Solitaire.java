@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import solitaire.GUI.DeckView;
 import solitaire.GUI.DiscardPileView;
 import solitaire.GUI.SuitStackView;
+import solitaire.GUI.WorkingStackView;
 import solitaire.internal.Card.Suit;
 import solitaire.internal.SuitStackManager.SuitStack;
 import solitaire.internal.WorkingStackManager.Workingstack;
@@ -24,7 +25,7 @@ public class Solitaire extends Application
     private DeckView aDeckView = new DeckView();
     private DiscardPileView aDiscardPileView = new DiscardPileView();
     private SuitStackView[] aSuitStacks = new SuitStackView[Suit.values().length];
-//    private CardStack[] aStacks = new CardStack[StackIndex.values().length];
+    private WorkingStackView[] aStacks = new WorkingStackView[Workingstack.values().length];
     
 	/**
 	 * Launches the application.
@@ -54,12 +55,12 @@ public class Solitaire extends Application
         	aSuitStacks[index.ordinal()] = new SuitStackView(index);
         	root.add(aSuitStacks[index.ordinal()], 3+index.ordinal(), 0);
         }
-//      
-//        for( StackIndex index : StackIndex.values() )
-//        {
-//        	aStacks[index.ordinal()] = new CardStack(index);
-//        	root.add(aStacks[index.ordinal()], index.ordinal(), 1);
-//        }
+      
+        for( Workingstack index : Workingstack.values() )
+        {
+        	aStacks[index.ordinal()] = new WorkingStackView(index);
+        	root.add(aStacks[index.ordinal()], index.ordinal(), 1);
+        }
 //        
 //        root.setOnKeyTyped(new EventHandler<KeyEvent>()
 //		{

@@ -37,7 +37,7 @@ public class WorkingStackManager {
             if (pCard.getRank().ordinal() == Card.Rank.KING.ordinal()) {
                 return true;
             }
-        } else {
+        } else {	
             if ((pCard.getSuit().ordinal() + aWorkingStack[workingstack.ordinal()].peek().getSuit().ordinal())
                     % 2 != 0) {
                 if (pCard.getRank()

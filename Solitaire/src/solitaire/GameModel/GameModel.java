@@ -235,6 +235,7 @@ public final class GameModel {
 		}
 		if (to instanceof Workingstack) {
 			if (aWorkingStack.canAdd(top,(Workingstack) to)) {
+				
 				return true;
 			}
 		}
@@ -270,39 +271,43 @@ public final class GameModel {
 		return null;
 	}
 
-	//
-	//
-	// public boolean isVisibleInWorkingStack(Card pCard, Workingstack
-	// pWorkingstack) {
-	// Stack<Card> aVisibleStack = aWorkingStack.viewWorkingStack((Workingstack)
-	// pWorkingstack);
-	// for (Card card : aVisibleStack) {
-	// if (pCard.equals(card)) {
-	// return true;
-	// }
-	// }
-	// return false;
-	// }
-	//
-	// public Card viewSuitStack(Location pSuitStack) {
-	// return aSuitStackManager.viewSuitStack((SuitStack) pSuitStack);
-	// }
-	//
-	//
-	// public Card peekDiscardPile() {
-	//
-	// return aDiscard.peek();
-	// }
-	//
-	// public Card[] getWorkingStack(Workingstack aIndex) {
-	// return aWorkingStack.getWorkingStack(aIndex);
-	// }
+	public boolean isVisibleInWorkingStack(Card pCard, Workingstack aIndex) {
+		return aWorkingStack.getVisibleWorkingStack(aIndex).contains(pCard);
+	}
 
-	// public Stack<Card> viewWorkingStack(Workingstack pWorkingStack) {
-	//
-	// return aWorkingStack.viewWorkingStack(pWorkingStack);
-	// }
+	public Card[] getStack(Workingstack aIndex) {
+		Card[] card = new Card[aWorkingStack.getWorkingStack(aIndex).size()];
+		for (int i = 0; i < aWorkingStack.getWorkingStack(aIndex).size() ;i++)
+		{
+			card[i] = aWorkingStack.getWorkingStack(aIndex).get(i);
+		}
+		return card;
+	}
 
+	public Card[] getSubStack(Card pCard, Workingstack aIndex) {
+		int index = -1;
+		for (int i = 0; i < aWorkingStack.getVisibleWorkingStack(aIndex).size() ; i++)
+		{
+			System.out.println(aWorkingStack.getVisibleWorkingStack(aIndex).get(i));
+			if (aWorkingStack.getVisibleWorkingStack(aIndex).get(i).equals(pCard))
+			{
+				index = i;
+				break;
+			}
+		}
+		int cardIndex = 0;
+		Card[] card = new Card[aWorkingStack.getVisibleWorkingStack(aIndex).size()-index];
+		for (int i = index; i < aWorkingStack.getVisibleWorkingStack(aIndex).size() ;i++)
+		{
+			card[cardIndex] = aWorkingStack.getVisibleWorkingStack(aIndex).get(i);
+			cardIndex++;
+		}
+		System.out.println("length: " + card.length);
+		return card;
+
+	}
+
+	
 	// public boolean hasNextMove() {
 	// return aPlayingStrategy.hasNextMove(GameModel.getInstance());
 	// }
