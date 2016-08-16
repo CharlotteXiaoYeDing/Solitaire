@@ -1,7 +1,8 @@
 package solitaire.GameModel;
 
-public interface GameModelListener {
+public interface GameModelListener
+{
 
-    void gameStateChanged();
+	void gameStateChanged();
 
 }

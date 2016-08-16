@@ -3,59 +3,81 @@ package solitaire.internal;
 import java.util.Iterator;
 import java.util.Stack;
 
-public class WorkingStack implements Iterable<Card> {
-    private final Stack<Card> aWorkingStack = new Stack<>();
-    private int aVisible;
+/**
+ * @author Charlotte
+ */
+public class WorkingStack implements Iterable<Card>
+{
+	private final Stack<Card> aWorkingStack = new Stack<>();
+	private int aVisible;
 
-    public WorkingStack(Deck deck, int num) {
-        for (int i = 0; i < num; i++) {
-            aWorkingStack.add(deck.draw());
-        }
-        aVisible = num-1;
-    }
-    
-    public WorkingStack()
-    {
-    	
-    }
-    
-    public int getSize()
-    {
-    	return aWorkingStack.size();
-    }
+	/**
+	 * Constructor.
+	 * @param deck
+	 * @param num
+	 */
+	public WorkingStack(Deck deck, int num)
+	{
+		for (int i = 0; i < num; i++)
+		{
+			aWorkingStack.add(deck.draw());
+		}
+		aVisible = num - 1;
+	}
 
-    public void push(Card pCard) {
-        aWorkingStack.push(pCard);
-    }
+	/**
+	 * @param pCard
+	 */
+	public void push(Card pCard)
+	{
+		aWorkingStack.push(pCard);
+	}
 
-    public Card draw() {
-        assert !aWorkingStack.isEmpty();
-        if (aVisible == aWorkingStack.size()-1)
-        {
-        	
-        	aVisible--;
-        }
-        return aWorkingStack.pop();
-        
-    }
+	/**
+	 * @return the card that is drawn
+	 */
+	public Card draw()
+	{
+		assert !aWorkingStack.isEmpty();
+		if (aVisible == aWorkingStack.size() - 1)
+		{
 
-    public Card peek() {
-        assert !aWorkingStack.isEmpty();
-        return aWorkingStack.peek();
-    }
+			aVisible--;
+		}
+		return aWorkingStack.pop();
 
-    public boolean isEmpty() {
-        return aWorkingStack.isEmpty();
-    }
+	}
 
-    public boolean getVisibility(Card pCard)
-    {
-    	int index = aWorkingStack.indexOf(pCard);
-    	return aVisible<=index;
-    }
-    
-    @Override
-    public Iterator<Card> iterator() {
-        return aWorkingStack.iterator();
-    }
+	/**
+	 * @return the last card added
+	 */
+	public Card peek()
+	{
+		assert !aWorkingStack.isEmpty();
+		return aWorkingStack.peek();
+	}
+
+	/**
+	 * @return whether a working stack is empty
+	 */
+	public boolean isEmpty()
+	{
+		return aWorkingStack.isEmpty();
+	}
+
+	/**
+	 * @param pCard
+	 * @return whether a card is visible
+	 */
+	public boolean getVisibility(Card pCard)
+	{
+		int index = aWorkingStack.indexOf(pCard);
+		return aVisible <= index;
+	}
+
+	@Override
+	public Iterator<Card> iterator()
+	{
+		return aWorkingStack.iterator();
+	}
 }

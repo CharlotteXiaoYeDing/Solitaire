@@ -3,7 +3,6 @@ package solitaire.GameModel;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import solitaire.GameModel.GameModel.CardDeck;
 import solitaire.feature.DiscardMove;
 import solitaire.feature.Move;
 import solitaire.feature.MultipleCardsMove;
@@ -13,15 +12,21 @@ import solitaire.internal.Card;
 import solitaire.internal.Deck;
 import solitaire.internal.Location;
 import solitaire.internal.SuitStackManager;
-import solitaire.internal.WorkingStack;
 import solitaire.internal.WorkingStackManager;
-import solitaire.internal.Card.Suit;
 import solitaire.internal.SuitStackManager.SuitStack;
 import solitaire.internal.WorkingStackManager.Workingstack;
-import solitaire.strategy.PlayStrategy;
 
-public final class GameModel {
-	public enum CardDeck implements Location {
+/**
+ * Game Model is a singleton.
+ * @author Charlotte
+ */
+public final class GameModel
+{
+	/**
+	 * @author Charlotte
+	 */
+	public enum CardDeck implements Location
+	{
 		DECK, DISCARD
 	}
 
@@ -33,19 +38,24 @@ public final class GameModel {
 	private UndoManager aUndoManager = new UndoManager(GameModel.getInstance());
 	private ArrayList<GameModelListener> aListenerList = new ArrayList<>();
 
-	private GameModel() {
+	private GameModel()
+	{
 	}
 
-	public static GameModel getInstance() {
+	/**
+	 * @return game model
+	 */
+	public static GameModel getInstance()
+	{
 		return INSTANCE;
 	}
 
 	/**
-	 * Initiate a new deck and shuffle it, set the first card of the deck to be
-	 * visible Initiate an empty stack as discard deck Initiate WorkingStack and
-	 * SuitStack
+	 * Initiate a new deck and shuffle it. Initiate an empty stack as
+	 * discard deck. Initiate WorkingStack and SuitStack.
 	 */
-	public void reset() {
+	public void reset()
+	{
 		aDeck.reset();
 		aDeck.shuffle();
 		aDiscard = new Stack<Card>();
@@ -53,23 +63,38 @@ public final class GameModel {
 		aSuitStackManager = new SuitStackManager();
 		notifyListener();
 	}
-	
-	public int getScore() {
+
+	/**
+	 * @return the score of the game
+	 */
+	public int getScore()
+	{
 		return aSuitStackManager.getScore();
 	}
 
-	public void addListener(GameModelListener aGameModelListener) {
+	/**
+	 * @param aGameModelListener
+	 */
+	public void addListener(GameModelListener aGameModelListener)
+	{
 		aListenerList.add(aGameModelListener);
 	}
 
-	private void notifyListener() {
-		for (GameModelListener aListener : aListenerList) {
+	private void notifyListener()
+	{
+		for (GameModelListener aListener : aListenerList)
+		{
 			aListener.gameStateChanged();
 		}
 	}
 
-	public boolean discard() {
-		if (!aDeck.isEmpty()) {
+	/**
+	 * @return whether discard successfully
+	 */
+	public boolean discard()
+	{
+		if (!aDeck.isEmpty())
+		{
 			aDiscard.add(aDeck.draw());
 			notifyListener();
 			return true;
@@ -77,60 +102,278 @@ public final class GameModel {
 		return false;
 	}
 
-	public boolean undoDiscard() {
-		if (!aDiscard.isEmpty()) {
+	/**
+	 * @return whether undo successfully
+	 */
+	public boolean undoDiscard()
+	{
+		if (!aDiscard.isEmpty())
+		{
 			aDeck.push(aDiscard.pop());
 			notifyListener();
 			return true;
 		}
 		return false;
 	}
+	
+	/**
+	 * @return Discard Move
+	 */
+	public Move getDiscardMove()
+	{
+		return new DiscardMove(GameModel.getInstance());
+	}
+	
+	/**
+	 * @param from
+	 * @param to
+	 * @return whether move successfully
+	 */
+	public boolean move(Location from, Location to)
+	{
 
-	public boolean undo(Location from, Location to) {
-		if (from instanceof CardDeck && to instanceof SuitStack) {
-			if (aSuitStackManager.canDraw(to)) {
-				aDiscard.push(aSuitStackManager.draw((SuitStack) to));
+		if (from instanceof CardDeck && to instanceof SuitStack)
+		{
+			if (!aDiscard.isEmpty() && aSuitStackManager.canAdd(aDiscard.peek()))
+			{
+				aSuitStackManager.add(aDiscard.pop());
 				notifyListener();
 				return true;
 			}
 		}
-		if (from instanceof CardDeck && to instanceof Workingstack) {
-			if (aWorkingStack.canDraw((Workingstack) to)) {
-				aDiscard.push(aWorkingStack.draw((Workingstack) to));
+
+		if (from instanceof CardDeck && to instanceof Workingstack)
+		{
+			if ((!aDiscard.isEmpty()) && aWorkingStack.canAdd(aDiscard.peek(), (Workingstack) to))
+			{
+				aWorkingStack.add(aDiscard.pop(), (Workingstack) to);
+				notifyListener();
+
+				return true;
+			}
+		}
+		if (from instanceof SuitStack && to instanceof Workingstack)
+		{
+			if (aSuitStackManager.canDraw(from)
+					&& aWorkingStack.canAdd(aSuitStackManager.viewSuitStack((SuitStack) from), (Workingstack) to))
+			{
+				aWorkingStack.add(aSuitStackManager.draw((SuitStack) from), (Workingstack) to);
 				notifyListener();
 				return true;
 			}
 		}
-		if (from instanceof SuitStack && to instanceof Workingstack) {
-			return move(to, from);
+		if (to instanceof SuitStack && from instanceof Workingstack)
+		{
+			if (aWorkingStack.canDraw((Workingstack) from)
+					&& aSuitStackManager.canAdd(aWorkingStack.getVisibleWorkingStack((Workingstack) from).peek()))
+			{
+				aSuitStackManager.add(aWorkingStack.draw((Workingstack) from));
+				notifyListener();
+				return true;
+			}
 		}
-		if (to instanceof SuitStack && from instanceof Workingstack) {
-			return move(to, from);
+		if (from instanceof Workingstack && to instanceof Workingstack)
+		{
+			if (aWorkingStack.canDraw((Workingstack) from) && aWorkingStack
+					.canAdd((aWorkingStack.getVisibleWorkingStack((Workingstack) from)).peek(), (Workingstack) to))
+			{
+				aWorkingStack.add(aWorkingStack.draw((Workingstack) from), (Workingstack) to);
+				notifyListener();
+				return true;
+			}
 		}
-		if (from instanceof Workingstack && to instanceof Workingstack) {
-			return move(to, from);
+		return false;
+	}
+
+	/**
+	 * @param from
+	 * @param to
+	 * @param pCard
+	 * @return whether move successfully
+	 */
+	public boolean move(Location from, Location to, Card pCard)
+	{
+		if (aWorkingStack.canDrawMultiple(pCard, (Workingstack) from) && aWorkingStack.canAdd(pCard, (Workingstack) to))
+		{
+			aWorkingStack.addMultiple(aWorkingStack.drawMultiple(pCard, (Workingstack) from), (Workingstack) to);
+			notifyListener();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param from
+	 * @return whether can be drawn
+	 */
+	public boolean canDraw(Location from)
+	{
+		if (from.equals(CardDeck.DECK))
+		{
+			if (!aDeck.isEmpty())
+			{
+				return true;
+			}
+		}
+		if (from.equals(CardDeck.DISCARD))
+		{
+			if (!aDiscard.isEmpty())
+			{
+				return true;
+			}
+		}
+
+		if (from instanceof SuitStack)
+		{
+			if (aSuitStackManager.canDraw(from))
+			{
+				return true;
+			}
+		}
+		if (from instanceof Workingstack)
+		{
+			if (aWorkingStack.canDraw((Workingstack) from))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param top
+	 * @param to
+	 * @return whether can be added
+	 */
+	public boolean canAdd(Card top, Location to)
+	{
+		if (to instanceof SuitStack)
+		{
+			if (aSuitStackManager.canAdd(top))
+			{
+				return true;
+			}
+		}
+		if (to instanceof Workingstack)
+		{
+			if (aWorkingStack.canAdd(top, (Workingstack) to))
+			{
+
+				return true;
+			}
 		}
 		return false;
 	}
 
 
-	public boolean undo(Location from, Location to, Card pCard) {
-		return move(to, from, pCard);
+
+	/**
+	 * @param from
+	 * @param to
+	 * @return whether undo successfully
+	 */
+	public boolean undo(Location from, Location to)
+	{
+		if (from instanceof CardDeck && to instanceof SuitStack)
+		{
+			if (aSuitStackManager.canDraw(to))
+			{
+				aDiscard.push(aSuitStackManager.draw((SuitStack) to));
+				notifyListener();
+				return true;
+			}
+		}
+		if (from instanceof CardDeck && to instanceof Workingstack)
+		{
+			if (aWorkingStack.canDraw((Workingstack) to))
+			{
+				aDiscard.push(aWorkingStack.draw((Workingstack) to));
+				notifyListener();
+				return true;
+			}
+		}
+		if (from instanceof SuitStack && to instanceof Workingstack)
+		{
+			return move(to, from);
+		}
+		if (to instanceof SuitStack && from instanceof Workingstack)
+		{
+			return move(to, from);
+		}
+		if (from instanceof Workingstack && to instanceof Workingstack)
+		{
+			return move(to, from);
+		}
+		return false;
 	}
 
-	public void logMove(Move pMove) {
+	/**
+	 * @param from
+	 * @param to
+	 * @param pCard
+	 * @return whether undo successfully
+	 */
+	public boolean undo(Location from, Location to, Card pCard)
+	{
+		return move(to, from, pCard);
+	}
+	
+	/**
+	 * @param top
+	 * @param pLocation
+	 * @return a move
+	 */
+	public Move getCardMove(Card top, Location pLocation)
+	{
+		if (top.equals(peekDiscard()))
+		{
+			return new OneCardMove(CardDeck.DISCARD, pLocation, getInstance());
+		}
+		for (SuitStack index : SuitStack.values())
+		{
+			if (top.equals(peekSuitStack(index)))
+			{
+				return new OneCardMove(index, pLocation, getInstance());
+			}
+		}
+		for (Workingstack ws : Workingstack.values())
+		{
+			if (!aWorkingStack.getVisibleWorkingStack(ws).isEmpty()
+					&& aWorkingStack.getVisibleWorkingStack(ws).peek().equals(top))
+			{
+				return new OneCardMove(ws, pLocation, getInstance());
+			}
+			for (Card c : aWorkingStack.getVisibleWorkingStack(ws))
+			{
+				if (c.equals(top))
+				{
+					return new MultipleCardsMove(ws, pLocation, c, getInstance());
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param pMove
+	 */
+	public void logMove(Move pMove)
+	{
 		aUndoManager.addMove(pMove);
 	}
 
-	public Move getDiscardMove() {
-		return new DiscardMove(GameModel.getInstance());
-	}
-
-	
-	public Card peekSuitStack(SuitStack aIndex) {
+	/**
+	 * @param aIndex
+	 * @return the top card of a suit stack
+	 */
+	public Card peekSuitStack(SuitStack aIndex)
+	{
 		return aSuitStackManager.viewSuitStack(aIndex);
 	}
 
+	/**
+	 * @return the top card of a discard deck
+	 */
 	public Card peekDiscard()
 	{
 		if (aDiscard.isEmpty())
@@ -139,149 +382,40 @@ public final class GameModel {
 		}
 		return aDiscard.peek();
 	}
-	
-	public boolean move(Location from, Location to) {
 
-		if (from instanceof CardDeck && to instanceof SuitStack) {
-			if (!aDiscard.isEmpty() && aSuitStackManager.canAdd(aDiscard.peek())) {
-				aSuitStackManager.add(aDiscard.pop());
-				notifyListener();
-				return true;
-			}
-		}
-
-		if (from instanceof CardDeck && to instanceof Workingstack) {
-			if ((!aDiscard.isEmpty()) && aWorkingStack.canAdd(aDiscard.peek(), (Workingstack) to)) {
-				aWorkingStack.add(aDiscard.pop(), (Workingstack) to);
-				notifyListener();
-
-				return true;
-			}
-		}
-		if (from instanceof SuitStack && to instanceof Workingstack) {
-			if (aSuitStackManager.canDraw(from)
-					&& aWorkingStack.canAdd(aSuitStackManager.viewSuitStack((SuitStack) from), (Workingstack) to)) {
-				aWorkingStack.add(aSuitStackManager.draw((SuitStack) from), (Workingstack) to);
-				notifyListener();
-				return true;
-			}
-		}
-		if (to instanceof SuitStack && from instanceof Workingstack) {
-			if (aWorkingStack.canDraw((Workingstack) from)
-					&& aSuitStackManager.canAdd(aWorkingStack.getVisibleWorkingStack((Workingstack) from).peek())) {
-				aSuitStackManager.add(aWorkingStack.draw((Workingstack) from));
-				notifyListener();
-				return true;
-			}
-		}
-		if (from instanceof Workingstack && to instanceof Workingstack) {
-			if (aWorkingStack.canDraw((Workingstack) from)
-					&& aWorkingStack.canAdd((aWorkingStack.getVisibleWorkingStack((Workingstack) from)).peek(),(Workingstack) to)) {
-				aWorkingStack.add(aWorkingStack.draw((Workingstack) from), (Workingstack) to);
-				notifyListener();
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean move(Location from, Location to, Card pCard) {
-		if (aWorkingStack.canDrawMultiple(pCard, (Workingstack) from)
-				&& aWorkingStack.canAdd(pCard, (Workingstack) to)) {
-			aWorkingStack.addMultiple(aWorkingStack.drawMultiple(pCard, (Workingstack) from), (Workingstack) to);
-			notifyListener();
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean canDraw( Location from)
+	/**
+	 * @param pCard
+	 * @param aIndex
+	 * @return whether card is visible
+	 */
+	public boolean isVisibleInWorkingStack(Card pCard, Workingstack aIndex)
 	{
-		if (from.equals(CardDeck.DECK))
-		{
-			if (!aDeck.isEmpty() ) {
-				return true;
-			}
-		}
-		if (from.equals(CardDeck.DISCARD)) {
-			if (!aDiscard.isEmpty() ) {
-				return true;
-			}
-		}
-
-		if (from instanceof SuitStack) {
-			if (aSuitStackManager.canDraw(from)) {
-				return true;
-			}
-		}
-		if (from instanceof Workingstack) {
-			if (aWorkingStack.canDraw((Workingstack) from)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean canAdd(Card top, Location to) {
-		if (to instanceof SuitStack) {
-			if (aSuitStackManager.canAdd(top)) {
-				return true;
-			}
-		}
-		if (to instanceof Workingstack) {
-			if (aWorkingStack.canAdd(top,(Workingstack) to)) {
-				
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public Move getCardMove(Card top, Location pLocation) {
-		if (top.equals(peekDiscard()))
-		{
-			return new OneCardMove(CardDeck.DISCARD, pLocation, getInstance());
-		}
-		for (SuitStack index: SuitStack.values())
-		{
-			if (top.equals(peekSuitStack(index)))
-			{
-				return new OneCardMove(index, pLocation, getInstance());
-			}
-		}
-		for (Workingstack ws: Workingstack.values())
-		{
-			if (!aWorkingStack.getVisibleWorkingStack(ws).isEmpty() && aWorkingStack.getVisibleWorkingStack(ws).peek().equals(top))
-			{
-				return new OneCardMove(ws, pLocation, getInstance());
-			}
-			for (Card c: aWorkingStack.getVisibleWorkingStack(ws))
-				{
-					if (c.equals(top))
-					{
-						 return new MultipleCardsMove(ws, pLocation, c, getInstance());
-					}
-				}
-		}
-		return null;
-	}
-
-	public boolean isVisibleInWorkingStack(Card pCard, Workingstack aIndex) {
 		return aWorkingStack.getVisibleWorkingStack(aIndex).contains(pCard);
 	}
 
-	public Card[] getStack(Workingstack aIndex) {
+	/**
+	 * @param aIndex
+	 * @return stack in an array
+	 */
+	public Card[] getStack(Workingstack aIndex)
+	{
 		Card[] card = new Card[aWorkingStack.getWorkingStack(aIndex).size()];
-		for (int i = 0; i < aWorkingStack.getWorkingStack(aIndex).size() ;i++)
+		for (int i = 0; i < aWorkingStack.getWorkingStack(aIndex).size(); i++)
 		{
 			card[i] = aWorkingStack.getWorkingStack(aIndex).get(i);
 		}
 		return card;
 	}
 
-	public Card[] getSubStack(Card pCard, Workingstack aIndex) {
+	/**
+	 * @param pCard
+	 * @param aIndex
+	 * @return sub stack in array
+	 */
+	public Card[] getSubStack(Card pCard, Workingstack aIndex)
+	{
 		int index = -1;
-		for (int i = 0; i < aWorkingStack.getVisibleWorkingStack(aIndex).size() ; i++)
+		for (int i = 0; i < aWorkingStack.getVisibleWorkingStack(aIndex).size(); i++)
 		{
 			System.out.println(aWorkingStack.getVisibleWorkingStack(aIndex).get(i));
 			if (aWorkingStack.getVisibleWorkingStack(aIndex).get(i).equals(pCard))
@@ -291,8 +425,8 @@ public final class GameModel {
 			}
 		}
 		int cardIndex = 0;
-		Card[] card = new Card[aWorkingStack.getVisibleWorkingStack(aIndex).size()-index];
-		for (int i = index; i < aWorkingStack.getVisibleWorkingStack(aIndex).size() ;i++)
+		Card[] card = new Card[aWorkingStack.getVisibleWorkingStack(aIndex).size() - index];
+		for (int i = index; i < aWorkingStack.getVisibleWorkingStack(aIndex).size(); i++)
 		{
 			card[cardIndex] = aWorkingStack.getVisibleWorkingStack(aIndex).get(i);
 			cardIndex++;

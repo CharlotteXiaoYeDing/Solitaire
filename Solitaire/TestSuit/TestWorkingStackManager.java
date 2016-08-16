@@ -8,10 +8,11 @@ import org.junit.Test;
 
 import solitaire.GameModel.GameModel;
 import solitaire.internal.Card;
-import solitaire.internal.Deck;
 import solitaire.internal.WorkingStackManager;
-import solitaire.internal.WorkingStackManager.Workingstack;
 
+/**
+ * @author Charlotte
+ */
 public class TestWorkingStackManager {
 	WorkingStackManager wst;
 	Stack<Card> stackOne;

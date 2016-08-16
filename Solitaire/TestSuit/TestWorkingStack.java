@@ -52,7 +52,6 @@ public class TestWorkingStack {
   {
 	  assertEquals(aWorkingStack.peek(), Card.flyWeightFactory(Card.Rank.JACK, Card.Suit.HEARTS));
 	  assertFalse(aWorkingStack.getVisibility(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.HEARTS)));
-	  assertEquals(aVisible, aWorkingStack.getSize()-1);
   }
   
   @Test
@@ -63,7 +62,6 @@ public class TestWorkingStack {
 	  aWorkingStack.push(Card.flyWeightFactory(Card.Rank.FIVE, Card.Suit.SPADES));
 	  assertTrue(aWorkingStack.getVisibility(Card.flyWeightFactory(Card.Rank.FIVE, Card.Suit.SPADES)));
 	  assertEquals(aWorkingStack.peek(), Card.flyWeightFactory(Card.Rank.FIVE, Card.Suit.SPADES));
-	  assertEquals(aVisible, aWorkingStack.getSize()-1-3);
   }
   
   @Test
@@ -77,9 +75,7 @@ public class TestWorkingStack {
 	  assertEquals(aVisible, 1);
 	  assertEquals(aWorkingStack.draw(),Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS));
 	  assertEquals(aVisible, 1);
-	  assertEquals(2, aWorkingStack.getSize());
 	  assertEquals(aWorkingStack.draw(),Card.flyWeightFactory(Card.Rank.JACK, Card.Suit.HEARTS));
-	  assertEquals(1, aWorkingStack.getSize());
 	  assertEquals((int) visible.get(aWorkingStack), 0);
 	  assertTrue(aWorkingStack.getVisibility(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.HEARTS)));
   }

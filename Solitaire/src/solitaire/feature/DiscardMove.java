@@ -2,28 +2,32 @@ package solitaire.feature;
 
 import solitaire.GameModel.GameModel;
 
-public class DiscardMove implements Move {
+public class DiscardMove implements Move
+{
 
-    GameModel aGameModel;
+	GameModel aGameModel;
 
-    public DiscardMove(GameModel pGameModel) {
-        aGameModel = pGameModel;
-    }
+	public DiscardMove(GameModel pGameModel)
+	{
+		aGameModel = pGameModel;
+	}
 
-    @Override
-    public boolean move() {
-        if (aGameModel.discard())
-        {
-        	aGameModel.logMove(this);
-        	return true;
-        }
-        return false;
-        
-    }
+	@Override
+	public boolean move()
+	{
+		if (aGameModel.discard())
+		{
+			aGameModel.logMove(this);
+			return true;
+		}
+		return false;
 
-    @Override
-    public boolean undo() {
-       return aGameModel.undoDiscard();
-    }
+	}
+
+	@Override
+	public boolean undo()
+	{
+		return aGameModel.undoDiscard();
+	}
 
 }
