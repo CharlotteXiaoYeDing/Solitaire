@@ -88,14 +88,9 @@ public class DeckView extends HBox implements GameModelListener
 		
 		
 		
-		if( GameModel.getInstance().isCompleted() )
-		{
-			context.fillText("You won!", Math.round(width/2), IMAGE_FONT_SIZE);
-		}
-		else
-		{
-			context.fillText("Give up?", Math.round(width/2), IMAGE_FONT_SIZE);
-		}
+
+			context.fillText("Start Again?", Math.round(width/2), IMAGE_FONT_SIZE);
+	
 		context.setTextAlign(TextAlignment.CENTER);
 		return canvas;
 	}

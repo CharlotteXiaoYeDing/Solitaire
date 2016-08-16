@@ -31,7 +31,6 @@ public final class GameModel {
 	private SuitStackManager aSuitStackManager;
 	private Stack<Card> aDiscard;
 	private UndoManager aUndoManager = new UndoManager(GameModel.getInstance());
-	// private PlayStrategy aPlayingStrategy = new StrategyOne();
 	private ArrayList<GameModelListener> aListenerList = new ArrayList<>();
 
 	private GameModel() {
@@ -127,10 +126,6 @@ public final class GameModel {
 		return new DiscardMove(GameModel.getInstance());
 	}
 
-	public boolean isCompleted() {
-		//To Do
-		return true;
-	}
 	
 	public Card peekSuitStack(SuitStack aIndex) {
 		return aSuitStackManager.viewSuitStack(aIndex);
@@ -306,13 +301,4 @@ public final class GameModel {
 		return card;
 
 	}
-
-	
-	// public boolean hasNextMove() {
-	// return aPlayingStrategy.hasNextMove(GameModel.getInstance());
-	// }
-	//
-	// public void autoplay() {
-	// aPlayingStrategy.move(this);
-	// }
 }

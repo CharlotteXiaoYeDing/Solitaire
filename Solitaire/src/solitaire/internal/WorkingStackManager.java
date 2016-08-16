@@ -34,9 +34,9 @@ public class WorkingStackManager {
     public boolean canAdd(Card pCard, Workingstack workingstack) {
         assert pCard != null;
         if (aWorkingStack[workingstack.ordinal()].isEmpty()) {
-            if (pCard.getRank().ordinal() == Card.Rank.KING.ordinal()) {
+            
                 return true;
-            }
+            
         } else {	
             if ((pCard.getSuit().ordinal() + aWorkingStack[workingstack.ordinal()].peek().getSuit().ordinal())
                     % 2 != 0) {
