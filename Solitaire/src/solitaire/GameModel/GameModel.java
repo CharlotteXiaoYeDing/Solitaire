@@ -270,7 +270,7 @@ public final class GameModel
 	/**
 	 * @param pSource
 	 * @param pDestination
-	 * @return whether undo successfully
+	 * @return whether undo successfully13
 	 */
 	public boolean undo(Location pSource, Location pDestination)
 	{
@@ -296,7 +296,7 @@ public final class GameModel
 		{
 			return move(pDestination, pSource);
 		}
-		if (pDestination instanceof SuitStack && pSource instanceof Workingstack)
+		if (pSource instanceof Workingstack && pDestination instanceof SuitStack)
 		{
 			return move(pDestination, pSource);
 		}
@@ -405,5 +405,11 @@ public final class GameModel
 			card[i] = aWorkingStack.getWorkingStack(aIndex).get(i);
 		}
 		return card;
+	}
+
+	public void undoLast()
+	{
+		aUndoManager.undo();
+		
 	}
 }

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import solitaire.GameModel.GameModel;
 import solitaire.internal.Card.Suit;
 import solitaire.internal.SuitStackManager.SuitStack;
 import solitaire.internal.WorkingStackManager.Workingstack;
@@ -60,25 +61,27 @@ public class Solitaire extends Application
 			aStacks[index.ordinal()] = new WorkingStackView(index);
 			root.add(aStacks[index.ordinal()], index.ordinal(), 1);
 		}
-		//
-		// root.setOnKeyTyped(new EventHandler<KeyEvent>()
-		// {
-		//
-		// @Override
-		// public void handle(final KeyEvent pEvent)
-		// {
-		// if( pEvent.getCharacter().equals("\r"))
-		// {
-		// GameModel.instance().tryToAutoPlay();
-		// }
-		// else if( pEvent.getCharacter().equals("\b"))
-		// {
-		// GameModel.instance().undoLast();
-		// }
-		// pEvent.consume();
-		// }
-		//
-		// });
+
+		root.setOnKeyTyped(new EventHandler<KeyEvent>()
+		{
+
+			@Override
+			public void handle(final KeyEvent pEvent)
+			{
+				// if( pEvent.getCharacter().equals("\r"))
+				// {
+				// GameModel.instance().tryToAutoPlay();
+				// }
+				// else
+				System.out.println(pEvent.getCharacter());
+				if (pEvent.getCharacter().equals("b"))
+				{
+					GameModel.getInstance().undoLast();
+				}
+				pEvent.consume();
+			}
+
+		});
 
 		pPrimaryStage.setResizable(false);
 		pPrimaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
