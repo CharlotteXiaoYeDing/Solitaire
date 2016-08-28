@@ -1,6 +1,6 @@
 # Solitaire
 
-A solitarie game written in Java.
+A solitaire game written in Java.
 
 ![alt text](https://github.com/CharlotteXiaoYeDing/Solitaire/blob/master/Solitaire/Readme1.png "Logo Title Text 1")
 
