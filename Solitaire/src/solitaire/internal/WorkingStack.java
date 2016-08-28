@@ -41,7 +41,6 @@ public class WorkingStack implements Iterable<Card>
 		assert !aWorkingStack.isEmpty();
 		if (aVisible == aWorkingStack.size() - 1)
 		{
-
 			aVisible--;
 		}
 		return aWorkingStack.pop();

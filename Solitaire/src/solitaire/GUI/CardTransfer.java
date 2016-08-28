@@ -6,37 +6,21 @@ public class CardTransfer
 {
 	private static final String SEPARATOR = ";";
 
-	private Card[] aCards;
+	private Card aCard;
 
 	public CardTransfer(String pString)
 	{
-		assert pString != null && pString.length() > 0;
-		String[] tokens = pString.split(SEPARATOR);
-		aCards = new Card[tokens.length];
-		for (int i = 0; i < tokens.length; i++)
-		{
-			aCards[i] = Card.get(tokens[i]);
-		}
-		assert aCards.length > 0;
+		assert pString != null;
+		aCard = Card.get(pString);
 	}
 
-	public static String serialize(Card[] pCards)
+	public static String serialize(Card pCard)
 	{
-		String lReturn = pCards[0].getIDString();
-		for (int i = 1; i < pCards.length; i++)
-		{
-			lReturn += ";" + pCards[i].getIDString();
-		}
-		return lReturn;
+		return pCard.getIDString();
 	}
 
-	public Card getTop()
+	public Card getCard()
 	{
-		return aCards[0];
-	}
-
-	public int size()
-	{
-		return aCards.length;
+		return aCard;
 	}
 }

@@ -125,16 +125,15 @@ public final class GameModel
 	}
 	
 	/**
-	 * @param from
-	 * @param to
+	 * @param pSource
+	 * @param pDestination
 	 * @return whether move successfully
 	 */
-	public boolean move(Location from, Location to)
+	public boolean move(Location pSource, Location pDestination)
 	{
-
-		if (from instanceof CardDeck && to instanceof SuitStack)
+		if (pSource.equals(CardDeck.DISCARD) && pDestination instanceof SuitStack)
 		{
-			if (!aDiscard.isEmpty() && aSuitStackManager.canAdd(aDiscard.peek()))
+			if (canDraw(pSource) && canAdd(aDiscard.peek(), pDestination))
 			{
 				aSuitStackManager.add(aDiscard.pop());
 				notifyListener();
@@ -142,42 +141,41 @@ public final class GameModel
 			}
 		}
 
-		if (from instanceof CardDeck && to instanceof Workingstack)
+		if (pSource.equals(CardDeck.DISCARD) && pDestination instanceof Workingstack)
 		{
-			if ((!aDiscard.isEmpty()) && aWorkingStack.canAdd(aDiscard.peek(), (Workingstack) to))
+			if (canDraw(pSource) && canAdd(aDiscard.peek(), pDestination))
 			{
-				aWorkingStack.add(aDiscard.pop(), (Workingstack) to);
-				notifyListener();
-
-				return true;
-			}
-		}
-		if (from instanceof SuitStack && to instanceof Workingstack)
-		{
-			if (aSuitStackManager.canDraw(from)
-					&& aWorkingStack.canAdd(aSuitStackManager.viewSuitStack((SuitStack) from), (Workingstack) to))
-			{
-				aWorkingStack.add(aSuitStackManager.draw((SuitStack) from), (Workingstack) to);
+				aWorkingStack.add(aDiscard.pop(), (Workingstack) pDestination);
 				notifyListener();
 				return true;
 			}
 		}
-		if (to instanceof SuitStack && from instanceof Workingstack)
+		if (pSource instanceof SuitStack && pDestination instanceof Workingstack)
 		{
-			if (aWorkingStack.canDraw((Workingstack) from)
-					&& aSuitStackManager.canAdd(aWorkingStack.getVisibleWorkingStack((Workingstack) from).peek()))
+			if (canDraw(pSource)
+					&& canAdd(aSuitStackManager.viewSuitStack((SuitStack) pSource), pDestination))
 			{
-				aSuitStackManager.add(aWorkingStack.draw((Workingstack) from));
+				aWorkingStack.add(aSuitStackManager.draw((SuitStack) pSource), (Workingstack) pDestination);
 				notifyListener();
 				return true;
 			}
 		}
-		if (from instanceof Workingstack && to instanceof Workingstack)
+		if (pDestination instanceof SuitStack && pSource instanceof Workingstack)
 		{
-			if (aWorkingStack.canDraw((Workingstack) from) && aWorkingStack
-					.canAdd((aWorkingStack.getVisibleWorkingStack((Workingstack) from)).peek(), (Workingstack) to))
+			if (canDraw(pSource)
+					&& aSuitStackManager.canAdd(aWorkingStack.getVisibleWorkingStack((Workingstack) pSource).peek()))
 			{
-				aWorkingStack.add(aWorkingStack.draw((Workingstack) from), (Workingstack) to);
+				aSuitStackManager.add(aWorkingStack.draw((Workingstack) pSource));
+				notifyListener();
+				return true;
+			}
+		}
+		if (pSource instanceof Workingstack && pDestination instanceof Workingstack)
+		{
+			if (canDraw(pSource) && aWorkingStack
+					.canAdd((aWorkingStack.getVisibleWorkingStack((Workingstack) pSource)).peek(), (Workingstack) pDestination))
+			{
+				aWorkingStack.add(aWorkingStack.draw((Workingstack) pSource), (Workingstack) pDestination);
 				notifyListener();
 				return true;
 			}
@@ -186,16 +184,16 @@ public final class GameModel
 	}
 
 	/**
-	 * @param from
-	 * @param to
+	 * @param pSource
+	 * @param pDestination
 	 * @param pCard
 	 * @return whether move successfully
 	 */
-	public boolean move(Location from, Location to, Card pCard)
+	public boolean move(Location pSource, Location pDestination, Card pCard)
 	{
-		if (aWorkingStack.canDrawMultiple(pCard, (Workingstack) from) && aWorkingStack.canAdd(pCard, (Workingstack) to))
+		if (canDraw(pSource) && canAdd(pCard, pDestination))
 		{
-			aWorkingStack.addMultiple(aWorkingStack.drawMultiple(pCard, (Workingstack) from), (Workingstack) to);
+			aWorkingStack.addMultiple(aWorkingStack.drawMultiple(pCard, (Workingstack) pSource), (Workingstack) pDestination);
 			notifyListener();
 			return true;
 		}
@@ -203,19 +201,20 @@ public final class GameModel
 	}
 
 	/**
-	 * @param from
+	 * @param pDestination
 	 * @return whether can be drawn
 	 */
-	public boolean canDraw(Location from)
+	public boolean canDraw(Location pDestination)
 	{
-		if (from.equals(CardDeck.DECK))
+		if (pDestination.equals(CardDeck.DECK))
 		{
 			if (!aDeck.isEmpty())
 			{
 				return true;
 			}
 		}
-		if (from.equals(CardDeck.DISCARD))
+		
+		if (pDestination.equals(CardDeck.DISCARD))
 		{
 			if (!aDiscard.isEmpty())
 			{
@@ -223,117 +222,118 @@ public final class GameModel
 			}
 		}
 
-		if (from instanceof SuitStack)
+		if (pDestination instanceof SuitStack)
 		{
-			if (aSuitStackManager.canDraw(from))
+			if (aSuitStackManager.canDraw(pDestination))
 			{
 				return true;
 			}
 		}
-		if (from instanceof Workingstack)
+		if (pDestination instanceof Workingstack)
 		{
-			if (aWorkingStack.canDraw((Workingstack) from))
+			if (aWorkingStack.canDraw((Workingstack) pDestination))
 			{
 				return true;
 			}
 		}
+		
 		return false;
 	}
 
 	/**
 	 * @param top
-	 * @param to
+	 * @param pDestination
 	 * @return whether can be added
 	 */
-	public boolean canAdd(Card top, Location to)
+	public boolean canAdd(Card top, Location pDestination)
 	{
-		if (to instanceof SuitStack)
+		if (pDestination instanceof SuitStack)
 		{
 			if (aSuitStackManager.canAdd(top))
 			{
 				return true;
 			}
 		}
-		if (to instanceof Workingstack)
+		
+		if (pDestination instanceof Workingstack)
 		{
-			if (aWorkingStack.canAdd(top, (Workingstack) to))
+			if (aWorkingStack.canAdd(top, (Workingstack) pDestination))
 			{
 
 				return true;
 			}
 		}
+		
 		return false;
 	}
 
-
-
 	/**
-	 * @param from
-	 * @param to
+	 * @param pSource
+	 * @param pDestination
 	 * @return whether undo successfully
 	 */
-	public boolean undo(Location from, Location to)
+	public boolean undo(Location pSource, Location pDestination)
 	{
-		if (from instanceof CardDeck && to instanceof SuitStack)
+		if (pSource instanceof CardDeck && pDestination instanceof SuitStack)
 		{
-			if (aSuitStackManager.canDraw(to))
+			if (aSuitStackManager.canDraw(pDestination))
 			{
-				aDiscard.push(aSuitStackManager.draw((SuitStack) to));
+				aDiscard.push(aSuitStackManager.draw((SuitStack) pDestination));
 				notifyListener();
 				return true;
 			}
 		}
-		if (from instanceof CardDeck && to instanceof Workingstack)
+		if (pSource instanceof CardDeck && pDestination instanceof Workingstack)
 		{
-			if (aWorkingStack.canDraw((Workingstack) to))
+			if (aWorkingStack.canDraw((Workingstack) pDestination))
 			{
-				aDiscard.push(aWorkingStack.draw((Workingstack) to));
+				aDiscard.push(aWorkingStack.draw((Workingstack) pDestination));
 				notifyListener();
 				return true;
 			}
 		}
-		if (from instanceof SuitStack && to instanceof Workingstack)
+		if (pSource instanceof SuitStack && pDestination instanceof Workingstack)
 		{
-			return move(to, from);
+			return move(pDestination, pSource);
 		}
-		if (to instanceof SuitStack && from instanceof Workingstack)
+		if (pDestination instanceof SuitStack && pSource instanceof Workingstack)
 		{
-			return move(to, from);
+			return move(pDestination, pSource);
 		}
-		if (from instanceof Workingstack && to instanceof Workingstack)
+		if (pSource instanceof Workingstack && pDestination instanceof Workingstack)
 		{
-			return move(to, from);
+			return move(pDestination, pSource);
 		}
 		return false;
 	}
 
 	/**
-	 * @param from
-	 * @param to
+	 * @param pSource
+	 * @param pDestination
 	 * @param pCard
 	 * @return whether undo successfully
 	 */
-	public boolean undo(Location from, Location to, Card pCard)
+	public boolean undo(Location pSource, Location pDestination, Card pCard)
 	{
-		return move(to, from, pCard);
+		return move(pDestination, pSource, pCard);
 	}
 	
 	/**
 	 * @param top
-	 * @param pLocation
+	 * @param pDestination
 	 * @return a move
 	 */
-	public Move getCardMove(Card top, Location pLocation)
+	public Move getCardMove(Card top, Location pDestination)
 	{
 		if (top.equals(peekDiscard()))
 		{
-			return new OneCardMove(CardDeck.DISCARD, pLocation, getInstance());
+			return new OneCardMove(CardDeck.DISCARD, pDestination, getInstance());
 		}
 		for (SuitStack index : SuitStack.values())
 		{
 			if (top.equals(peekSuitStack(index)))
 			{
-				return new OneCardMove(index, pLocation, getInstance());
+				return new OneCardMove(index, pDestination, getInstance());
 			}
 		}
 		for (Workingstack ws : Workingstack.values())
@@ -341,13 +341,13 @@ public final class GameModel
 			if (!aWorkingStack.getVisibleWorkingStack(ws).isEmpty()
 					&& aWorkingStack.getVisibleWorkingStack(ws).peek().equals(top))
 			{
-				return new OneCardMove(ws, pLocation, getInstance());
+				return new OneCardMove(ws, pDestination, getInstance());
 			}
 			for (Card c : aWorkingStack.getVisibleWorkingStack(ws))
 			{
 				if (c.equals(top))
 				{
-					return new MultipleCardsMove(ws, pLocation, c, getInstance());
+					return new MultipleCardsMove(ws, pDestination, c, getInstance());
 				}
 			}
 		}
@@ -405,34 +405,5 @@ public final class GameModel
 			card[i] = aWorkingStack.getWorkingStack(aIndex).get(i);
 		}
 		return card;
-	}
-
-	/**
-	 * @param pCard
-	 * @param aIndex
-	 * @return sub stack in array
-	 */
-	public Card[] getSubStack(Card pCard, Workingstack aIndex)
-	{
-		int index = -1;
-		for (int i = 0; i < aWorkingStack.getVisibleWorkingStack(aIndex).size(); i++)
-		{
-			System.out.println(aWorkingStack.getVisibleWorkingStack(aIndex).get(i));
-			if (aWorkingStack.getVisibleWorkingStack(aIndex).get(i).equals(pCard))
-			{
-				index = i;
-				break;
-			}
-		}
-		int cardIndex = 0;
-		Card[] card = new Card[aWorkingStack.getVisibleWorkingStack(aIndex).size() - index];
-		for (int i = index; i < aWorkingStack.getVisibleWorkingStack(aIndex).size(); i++)
-		{
-			card[cardIndex] = aWorkingStack.getVisibleWorkingStack(aIndex).get(i);
-			cardIndex++;
-		}
-		System.out.println("length: " + card.length);
-		return card;
-
 	}
 }

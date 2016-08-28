@@ -107,9 +107,9 @@ public class TestWorkingStackManager {
 		wst.add(Card.flyWeightFactory(Card.Rank.JACK, Card.Suit.SPADES), (WorkingStackManager.Workingstack.StackSeven));
 		wst.add(Card.flyWeightFactory(Card.Rank.TEN, Card.Suit.HEARTS), (WorkingStackManager.Workingstack.StackSeven));
 		
-		assertTrue(wst.canDrawMultiple(Card.flyWeightFactory(Card.Rank.QUEEN, Card.Suit.DIAMONDS),
+		assertTrue(wst.canDraw(
 				(WorkingStackManager.Workingstack.StackSeven)));
-		assertFalse(wst.canDrawMultiple(Card.flyWeightFactory(Card.Rank.KING, Card.Suit.DIAMONDS),
+		assertFalse(wst.canDraw(
 				(WorkingStackManager.Workingstack.StackSeven)));
 
 		wst.draw((WorkingStackManager.Workingstack.StackFive));

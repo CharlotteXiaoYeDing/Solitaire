@@ -87,7 +87,7 @@ public class WorkingStackView extends StackPane implements GameModelListener
 			{
 				Dragboard db = pImageView.startDragAndDrop(TransferMode.ANY);
 				ClipboardContent content = new ClipboardContent();
-				content.putString(CardTransfer.serialize(GameModel.getInstance().getSubStack(pCard, aIndex)));
+				content.putString(CardTransfer.serialize(pCard));
 				db.setContent(content);
 				pMouseEvent.consume();
 			}
@@ -103,7 +103,7 @@ public class WorkingStackView extends StackPane implements GameModelListener
 				if (pEvent.getGestureSource() != pImageView && pEvent.getDragboard().hasString())
 				{
 					CardTransfer transfer = new CardTransfer(pEvent.getDragboard().getString());
-					if (GameModel.getInstance().canAdd(transfer.getTop(), aIndex))
+					if (GameModel.getInstance().canAdd(transfer.getCard(), aIndex))
 					{
 						pEvent.acceptTransferModes(TransferMode.MOVE);
 					}
@@ -120,7 +120,7 @@ public class WorkingStackView extends StackPane implements GameModelListener
 			public void handle(DragEvent pEvent)
 			{
 				CardTransfer transfer = new CardTransfer(pEvent.getDragboard().getString());
-				if (GameModel.getInstance().canAdd(transfer.getTop(), aIndex))
+				if (GameModel.getInstance().canAdd(transfer.getCard(), aIndex))
 				{
 					pImageView.setEffect(new DropShadow());
 				}
@@ -151,7 +151,7 @@ public class WorkingStackView extends StackPane implements GameModelListener
 				boolean success = false;
 				if (db.hasString())
 				{
-					GameModel.getInstance().getCardMove(new CardTransfer(db.getString()).getTop(), aIndex).move();
+					GameModel.getInstance().getCardMove(new CardTransfer(db.getString()).getCard(), aIndex).move();
 					success = true;
 				}
 

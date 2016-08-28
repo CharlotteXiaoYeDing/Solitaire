@@ -41,9 +41,7 @@ public class WorkingStackManager
 		assert pCard != null;
 		if (aWorkingStack[workingstack.ordinal()].isEmpty())
 		{
-
 			return true;
-
 		}
 		else
 		{
@@ -113,7 +111,7 @@ public class WorkingStackManager
 	 */
 	public Stack<Card> drawMultiple(Card pCard, Workingstack workingstack)
 	{
-		assert canDrawMultiple(pCard, workingstack);
+		assert canDraw(workingstack);
 		Stack<Card> aStack = new Stack<>();
 		while (pCard != aWorkingStack[workingstack.ordinal()].peek())
 		{
@@ -124,26 +122,11 @@ public class WorkingStackManager
 	}
 
 	/**
-	 * @param pCard
-	 * @param workingstack
-	 * @return whether a stack of card can be drawn
-	 */
-	public boolean canDrawMultiple(Card pCard, Workingstack workingstack)
-	{
-		if (aWorkingStack[workingstack.ordinal()].isEmpty())
-		{
-			return false;
-		}
-		return aWorkingStack[workingstack.ordinal()].getVisibility(pCard);
-	}
-
-	/**
 	 * @param pWorkingstack
 	 * @return the stack of working stack
 	 */
 	public Stack<Card> getWorkingStack(Workingstack pWorkingstack)
 	{
-
 		Stack<Card> stack = new Stack<>();
 
 		for (Card aC : aWorkingStack[pWorkingstack.ordinal()])
@@ -170,5 +153,4 @@ public class WorkingStackManager
 		}
 		return stack;
 	}
-
 }
